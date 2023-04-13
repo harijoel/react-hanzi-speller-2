@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import hsk3 from './hsk-3.json'
 import ChineseWord from "./ChineseWord"
 import { SpelledKey } from "./types"
-import { getWordArray } from "./util"
+import { getWordArray, sylibalizeInput } from "./util"
 
 
 function getRandomHSK() {
@@ -11,28 +11,14 @@ function getRandomHSK() {
 }
 
 function App() {
-  //const [randomHSK, setRandomHSK] = useState(getRandomHSK)
-  const randomHSK = {
-    "metadata": {
-        "id": "009",
-        "learned": false,
-        "description": ""
-    },
-    "translation-data": {
-        "english": "office",
-        "pinyin-numbered": "ban4gong1shi4",
-        "pinyin": "bàngōngshì",
-        "simplified": "办公室",
-        "traditional": "辦公室"
-    }
-}
+  const [randomHSK, setRandomHSK] = useState(getRandomHSK)
   const [inputKeys, setInputKeys] = useState<SpelledKey[]>([])
   const [mistakes, setMistakes] = useState<string[]>([])
-  
+  // Settings
   const mistakeCountTolerance = 3
   const mode = "noTones"
-  const traditional = false
-
+  const traditional = true
+  // hanziPinyinArrayWord, textToType // Once every new word
   const [hanziPinyinArrayWord, textToType] = useMemo(() => {
     const word = randomHSK["translation-data"]
     const hanziPinyinArrayWord = getWordArray(
@@ -41,9 +27,15 @@ function App() {
                                     word["pinyin-numbered"],
                                     mode)
     const textToType = hanziPinyinArrayWord.map(syl => syl.textToType_Syl).join("").split("")
-
     return [hanziPinyinArrayWord, textToType]
   }, [randomHSK])
+
+  // Pinyinize input
+  const inputSylArray = useMemo(() => {
+    return sylibalizeInput(hanziPinyinArrayWord, inputKeys)
+  }, [inputKeys])
+
+  const spellingOver = inputKeys.length === textToType.length
 
   console.log("## randomHSK ##")
   console.log(randomHSK)
@@ -56,7 +48,7 @@ function App() {
       setInputKeys(currentSpelledKeys => [...currentSpelledKeys, 
                                           {inputKey: mistakes.length ? mistakes[0] : key,
                                           correctKey: textToType[currentSpelledKeys.length]}
-                                          // why correntKey can't just be key
+                                          // why currentKey can't just be key
                                           ]
                   )
       setMistakes([])
@@ -126,6 +118,28 @@ function App() {
     }
   }, [inputKeys, mistakes])
 
+  // Handle hitting Enter
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+
+      if (e.key != "Enter") return
+      e.preventDefault
+
+      // Start new word
+      if (spellingOver) {
+        setInputKeys([])
+        setRandomHSK(getRandomHSK())
+      }
+      
+    }
+
+    document.addEventListener("keypress", handler)
+    return () => {
+      document.removeEventListener("keypress", handler)
+    }
+
+  }, [inputKeys])
+
   return (
     <div>
       <h1>
@@ -138,7 +152,7 @@ function App() {
       </h1>
       <ChineseWord 
         hanziPinyinArrayWord={hanziPinyinArrayWord} 
-        inputKeys={inputKeys}
+        inputSylArray={inputSylArray}
         traditional={traditional}
         mode={mode}
       />

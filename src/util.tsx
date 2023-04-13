@@ -1,4 +1,4 @@
-import { HanziPinyin } from "./types";
+import { HanziPinyin, SpelledKey } from "./types";
 
 
 
@@ -54,5 +54,24 @@ export function getWordArray(wordHanzi: [string, string], wordPinyinAccented: st
 }
 
 export function getTextToType_SylArray(wordArray: HanziPinyin[], mode: string) {
+    
+}
 
+export function sylibalizeInput(hanziPinyinArrayWord: HanziPinyin[], inputKeys: SpelledKey[]) {
+    //Sylibalize input
+    const sylNo = hanziPinyinArrayWord.length
+    const textToTypeArr = hanziPinyinArrayWord.map(syl => syl.textToType_Syl)
+    let index_start = 0
+    // const inputKeys_input = inputKeys.map(spell => spell.inputKey)
+    let inputSylArray: any = [] // try Define as array of array of strings
+    for (let index = 0; index < sylNo; index++) {
+        let sylSlice = inputKeys.slice(
+                index_start,
+                index_start + textToTypeArr[index].length
+        )
+        if (!sylSlice.length) { break; }
+        inputSylArray = [...inputSylArray, sylSlice] // Result: array of arrays
+        index_start = index_start + textToTypeArr[index].length
+    }
+    return inputSylArray
 }
