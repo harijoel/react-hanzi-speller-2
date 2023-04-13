@@ -1,21 +1,55 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import hsk3 from './hsk-3.json'
+import ChineseWord from "./ChineseWord"
+import { SpelledKey } from "./types"
+import { getWordArray } from "./util"
 
-function getText() {
-  return "abcdefghijklmnopqrstuvwxyz".split("")
-}
 
-type SpelledKey = {
-  inputKey: string
-  correctKey: string
+function getRandomHSK() {
+  const random_HSK_vocab_id = Math.floor(Math.random() * hsk3.words.length)
+  return hsk3.words[random_HSK_vocab_id]
 }
 
 function App() {
-  const [textToType, setTextToType] = useState(getText)
+  //const [randomHSK, setRandomHSK] = useState(getRandomHSK)
+  const randomHSK = {
+    "metadata": {
+        "id": "009",
+        "learned": false,
+        "description": ""
+    },
+    "translation-data": {
+        "english": "office",
+        "pinyin-numbered": "ban4gong1shi4",
+        "pinyin": "bàngōngshì",
+        "simplified": "办公室",
+        "traditional": "辦公室"
+    }
+}
   const [inputKeys, setInputKeys] = useState<SpelledKey[]>([])
   const [mistakes, setMistakes] = useState<string[]>([])
+  
   const mistakeCountTolerance = 3
-  console.log(mistakes)
-  console.log(mistakes.length)
+  const mode = "noTones"
+  const traditional = false
+
+  const [hanziPinyinArrayWord, textToType] = useMemo(() => {
+    const word = randomHSK["translation-data"]
+    const hanziPinyinArrayWord = getWordArray(
+                                    [word.simplified, word.traditional],
+                                    word.pinyin,
+                                    word["pinyin-numbered"],
+                                    mode)
+    const textToType = hanziPinyinArrayWord.map(syl => syl.textToType_Syl).join("").split("")
+
+    return [hanziPinyinArrayWord, textToType]
+  }, [randomHSK])
+
+  console.log("## randomHSK ##")
+  console.log(randomHSK)
+  console.log("## hanzi pinyin array word ##")
+  console.log(hanziPinyinArrayWord)
+
 
   const addInputKey = useCallback(
     (key: string) => {
@@ -34,7 +68,6 @@ function App() {
   useEffect(() => {
     // # Move this oustide
     if (mistakes.length >= mistakeCountTolerance) {
-      console.log("##############")
       const index = inputKeys.length
       const textAhead = textToType.slice(index+1, index+1 + mistakeCountTolerance)
       const mistakesFromAbsent = mistakes.slice(0, mistakeCountTolerance)
@@ -103,6 +136,12 @@ function App() {
               )})
         }
       </h1>
+      <ChineseWord 
+        hanziPinyinArrayWord={hanziPinyinArrayWord} 
+        inputKeys={inputKeys}
+        traditional={traditional}
+        mode={mode}
+      />
     </div>
     
   )
