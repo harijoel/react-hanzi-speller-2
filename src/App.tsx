@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import hsk3 from './hsk-3.json'
 import ChineseWord from "./ChineseWord"
 import { SpelledKey } from "./types"
-import { getWordArray, sylibalizeInput } from "./util"
+import { getDynamicIndex, getWordArray, sylibalizeInput } from "./util"
 
 
 function getRandomHSK() {
@@ -14,9 +14,10 @@ function App() {
   const [randomHSK, setRandomHSK] = useState(getRandomHSK)
   const [inputKeys, setInputKeys] = useState<SpelledKey[]>([])
   const [mistakes, setMistakes] = useState<string[]>([])
+  const [revealNos, setRevealNos] = useState<number[]>([])
   // Settings
   const mistakeCountTolerance = 2
-  const mode = "noTones"
+  const mode = "withTones"
   const traditional = true
   // hanziPinyinArrayWord, textToType // Once every new word
   const [hanziPinyinArrayWord, textToType, textToTypeSyl_Array] = useMemo(() => {
@@ -38,7 +39,9 @@ function App() {
   console.log(inputSylArray)
 
   const spellingOver = inputKeys.length === textToType.length
+  const dynamicIndex = getDynamicIndex(inputSylArray, textToTypeSyl_Array)
 
+  // ##  End of dependent variables  ## //
 
   const addInputKey = useCallback(
     (key: string) => {
@@ -89,7 +92,6 @@ function App() {
     }
     // # End Move this oustide
   }, [mistakes])
-  
 
 
   useEffect(() => {
@@ -126,8 +128,9 @@ function App() {
       if (spellingOver) {
         setInputKeys([])
         setRandomHSK(getRandomHSK())
+        setRevealNos([])
       } else {
-
+        setRevealNos([dynamicIndex])
       }
       
     }
@@ -145,7 +148,7 @@ function App() {
         {inputKeys.map((c, i) => {
           const color = c.correctKey == c.inputKey ? "blue" : "red"
           return (
-            <span key={200+i} style={{color: color}}>{c.correctKey}</span>
+            <span key={"header-"+i} style={{color: color}}>{c.correctKey}</span>
               )})
         }
       </h1>
@@ -154,6 +157,7 @@ function App() {
         inputSylArray={inputSylArray}
         traditional={traditional}
         textToTypeSyl_Array={textToTypeSyl_Array}
+        revealNos={revealNos}
         mode={mode}
       />
     </div>
