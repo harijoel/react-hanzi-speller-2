@@ -63,15 +63,39 @@ export function sylibalizeInput(hanziPinyinArrayWord: HanziPinyin[], inputKeys: 
     const textToTypeArr = hanziPinyinArrayWord.map(syl => syl.textToType_Syl)
     let index_start = 0
     // const inputKeys_input = inputKeys.map(spell => spell.inputKey)
-    let inputSylArray: any = [] // try Define as array of array of strings
+    let inputSylArray: any = [] // try Define as array of arrays of SpelledKey-type elements
     for (let index = 0; index < sylNo; index++) {
         let sylSlice = inputKeys.slice(
                 index_start,
                 index_start + textToTypeArr[index].length
         )
-        if (!sylSlice.length) { break; }
+        if (!sylSlice.length) {
+            break; }
         inputSylArray = [...inputSylArray, sylSlice] // Result: array of arrays
         index_start = index_start + textToTypeArr[index].length
     }
-    return inputSylArray
+    return inputSylArray // [ [z, h, o, n, g], [g, u, o: SpelledKey], [] ] "中国人"
+}
+
+export function getDynamicIndex(inputSylArray: any[], textToTypeSyl_Array: string[]): number {
+    let normalIndex = inputSylArray.length - 1
+    let dynamicIndex = normalIndex
+    if (inputSylArray.length === 0) {
+        return 0
+    } 
+    // Length of current sylable being typed === length of complete sylable at that index
+    const isSylableComplete = inputSylArray[normalIndex].length === textToTypeSyl_Array[normalIndex].length
+
+    // When the whole word has been typed
+    if (isSylableComplete && inputSylArray.length === textToTypeSyl_Array.length) {
+        return normalIndex
+    }
+    
+    // When sylable has been typed but not the whole word
+    if (isSylableComplete) {
+        return normalIndex + 1
+    }
+
+    // When sylable has not been yet typed completely
+    return normalIndex
 }

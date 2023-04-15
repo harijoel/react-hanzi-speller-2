@@ -15,32 +15,29 @@ function App() {
   const [inputKeys, setInputKeys] = useState<SpelledKey[]>([])
   const [mistakes, setMistakes] = useState<string[]>([])
   // Settings
-  const mistakeCountTolerance = 3
+  const mistakeCountTolerance = 2
   const mode = "noTones"
   const traditional = true
   // hanziPinyinArrayWord, textToType // Once every new word
-  const [hanziPinyinArrayWord, textToType] = useMemo(() => {
+  const [hanziPinyinArrayWord, textToType, textToTypeSyl_Array] = useMemo(() => {
     const word = randomHSK["translation-data"]
     const hanziPinyinArrayWord = getWordArray(
                                     [word.simplified, word.traditional],
                                     word.pinyin,
                                     word["pinyin-numbered"],
                                     mode)
-    const textToType = hanziPinyinArrayWord.map(syl => syl.textToType_Syl).join("").split("")
-    return [hanziPinyinArrayWord, textToType]
+    const textToTypeSyl_Array = hanziPinyinArrayWord.map(syl => syl.textToType_Syl)
+    const textToType = textToTypeSyl_Array.join("").split("")
+    return [hanziPinyinArrayWord, textToType, textToTypeSyl_Array]
   }, [randomHSK])
 
   // Pinyinize input
   const inputSylArray = useMemo(() => {
     return sylibalizeInput(hanziPinyinArrayWord, inputKeys)
   }, [inputKeys])
+  console.log(inputSylArray)
 
   const spellingOver = inputKeys.length === textToType.length
-
-  console.log("## randomHSK ##")
-  console.log(randomHSK)
-  console.log("## hanzi pinyin array word ##")
-  console.log(hanziPinyinArrayWord)
 
 
   const addInputKey = useCallback(
@@ -125,10 +122,12 @@ function App() {
       if (e.key != "Enter") return
       e.preventDefault
 
-      // Start new word
+      // Start new word if game is over
       if (spellingOver) {
         setInputKeys([])
         setRandomHSK(getRandomHSK())
+      } else {
+
       }
       
     }
@@ -146,7 +145,7 @@ function App() {
         {inputKeys.map((c, i) => {
           const color = c.correctKey == c.inputKey ? "blue" : "red"
           return (
-            <span key={i} style={{color: color}}>{c.correctKey}</span>
+            <span key={200+i} style={{color: color}}>{c.correctKey}</span>
               )})
         }
       </h1>
@@ -154,6 +153,7 @@ function App() {
         hanziPinyinArrayWord={hanziPinyinArrayWord} 
         inputSylArray={inputSylArray}
         traditional={traditional}
+        textToTypeSyl_Array={textToTypeSyl_Array}
         mode={mode}
       />
     </div>
