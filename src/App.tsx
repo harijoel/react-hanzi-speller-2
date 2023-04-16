@@ -17,7 +17,7 @@ function App() {
   const [revealNos, setRevealNos] = useState<number[]>([])
   // Settings
   const mistakeCountTolerance = 2
-  const mode = "withTones"
+  const mode = "noTones"
   const traditional = true
   // hanziPinyinArrayWord, textToType // Once every new word
   const [hanziPinyinArrayWord, textToType, textToTypeSyl_Array] = useMemo(() => {
@@ -45,16 +45,23 @@ function App() {
 
   const addInputKey = useCallback(
     (key: string) => {
-      setInputKeys(currentSpelledKeys => [...currentSpelledKeys, 
-                                          {inputKey: mistakes.length ? mistakes[0] : key,
-                                          correctKey: textToType[currentSpelledKeys.length]}
-                                          // why currentKey can't just be key
-                                          ]
+      setInputKeys(currentSpelledKeys => 
+        [...currentSpelledKeys,  
+        { inputKey: 
+          !revealNos.length // if not reveal mode
+            ? (mistakes.length // if there is mistake
+              ? mistakes[0]    // dispaly that mistake
+              : key)           // else diaplay correct
+            : "missing",    // display missing mistake
+        correctKey: key //textToType[currentSpelledKeys.length]
+        }
+        // why currentKey can't just be key
+        ]
                   )
       setMistakes([])
 
     },
-    [inputKeys, mistakes]
+    [inputKeys, mistakes, revealNos]
   )
 
   useEffect(() => {
@@ -115,7 +122,7 @@ function App() {
     return () => {
       document.removeEventListener("keypress", handler)
     }
-  }, [inputKeys, mistakes])
+  }, [inputKeys, mistakes, revealNos])
 
   // Handle hitting Enter
   useEffect(() => {
@@ -130,7 +137,10 @@ function App() {
         setRandomHSK(getRandomHSK())
         setRevealNos([])
       } else {
-        setRevealNos([dynamicIndex])
+        if (mistakes.length > 0 || dynamicIndex === inputSylArray.length - 1) {
+          setRevealNos([dynamicIndex])
+        }
+        
       }
       
     }
@@ -140,7 +150,7 @@ function App() {
       document.removeEventListener("keypress", handler)
     }
 
-  }, [inputKeys])
+  }, [inputKeys, mistakes])
 
   return (
     <div>

@@ -19,7 +19,8 @@ export default function Hanzi({hanziPinyinChar, spelledKeys=[], traditional, act
     const textToType = hanziPinyinChar.textToType_Syl
     const correctMap = spelledKeys.map((sKey, i) => sKey.inputKey === sKey.correctKey)
     const isThereAnyMistake= correctMap.some(correct => !correct)
-    
+    const pinyinRoman = hanziPinyinChar.pinyinNo
+
     return (
         <div>
             <div>{active ? "A" : "o" }</div>
@@ -29,6 +30,7 @@ export default function Hanzi({hanziPinyinChar, spelledKeys=[], traditional, act
             <Speller spelledKeys={spelledKeys} 
                      textToType={textToType} 
                      pinyinAcc={hanziPinyinChar.pinyinAcc} 
+                     pinyinRoman={pinyinRoman}
                      correctMap={correctMap}
                      isReveal={isReveal}
                      mode={mode} 
