@@ -124,6 +124,10 @@ function App() {
     }
   }, [inputKeys, mistakes, revealNos])
 
+  useEffect(() => {
+    setRevealNos([])
+  }, [dynamicIndex])
+
   // Handle hitting Enter
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
