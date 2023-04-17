@@ -16,3 +16,18 @@ export type Setting = {
   traditional: boolean
   easyMode: boolean
 }
+
+export type HSKword = {
+  metadata: {
+      id: string;
+      learned: boolean;
+      description: string;
+  };
+  "translation-data": {
+      english: string;
+      "pinyin-numbered": string;
+      pinyin: string;
+      simplified: string;
+      traditional: string;
+  };
+}

@@ -1,26 +1,23 @@
-import React, { useEffect, useRef } from 'react'
-import { Setting } from './types'
+import React, { SetStateAction, useEffect, useRef } from 'react'
+import { HSKword, Setting, SpelledKey } from './types'
 
 type SettingsProps = {
-    setInputKeys: any
-    setRandomHSK: any
-    getRandomHSK: any
-    setRevealNos: any
-    setSettings: any
-    settings: Setting
+    setInputKeys: (value: SpelledKey[]) => void //React.Dispatch<React.SetStateAction<SpelledKey[]>>
+    setHskWord: (value: HSKword) => void
+    getRandomHSK: (value: void) => HSKword
+    setRevealNos: (value: number[]) => void
+    setSettings: (value: SetStateAction<Setting>) => void
 }
 
-export default function Settings({setInputKeys, setRandomHSK, getRandomHSK, setRevealNos, setSettings, settings}: SettingsProps) {
+export default function Settings({setInputKeys, setHskWord, getRandomHSK, setRevealNos, setSettings}: SettingsProps) {
     const modeEl = useRef<HTMLSelectElement>(null)
     const toleranceEl = useRef<HTMLInputElement>(null)
-    const easyEl = useRef<HTMLInputElement>(null)
-
 
     function handleSubmit(e: any) {
         e.preventDefault()
         console.log("$$$ prevented default $$$")
         setInputKeys([])
-        setRandomHSK(getRandomHSK())
+        setHskWord(getRandomHSK())
         setRevealNos([])
         setSettings((oldSettings: Setting) => { return {
             ...oldSettings,

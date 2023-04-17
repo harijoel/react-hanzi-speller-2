@@ -22,9 +22,9 @@ export default function Hanzi({hanziPinyinChar, spelledKeys=[], traditional, act
     const pinyinRoman = hanziPinyinChar.pinyinNo
 
     return (
-        <div>
-            <div>{active ? "A" : "o" }</div>
-            <div style={{color: isThereAnyMistake ? "red" : "black"}} className="hanzi" >
+        <div className="hanzi">
+            <div>{active ? "(*)" : "( )" }</div>
+            <div style={{color: isThereAnyMistake ? "red" : "black"}} className="character" >
                 {character}
             </div>
             <Speller spelledKeys={spelledKeys} 

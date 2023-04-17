@@ -5,7 +5,7 @@ import { getDynamicIndex } from './util'
 
 type ChineseWordProps = {
     hanziPinyinArrayWord: HanziPinyin[]
-    inputSylArray: []
+    inputSylArray: SpelledKey[][]
     traditional: boolean
     textToTypeSyl_Array: string[]
     revealNos: number[]
@@ -25,7 +25,7 @@ export default function ChineseWord({
     const dynamicIndex = getDynamicIndex(inputSylArray, textToTypeSyl_Array)
 
     return (
-        <div>
+        <div className="chineseword">
             {hanziPinyinArrayWord.map((syl, i) => 
                 <Hanzi 
                     key={"hanzi-"+i}

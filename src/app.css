@@ -1,0 +1,30 @@
+.settings {
+    color: purple;
+}
+
+.form-group {
+    display: inline;
+}
+
+.hanzi {
+    display: inline;
+    color: green
+}
+
+.character {
+    font-size: 90px;
+}
+
+.mistake {
+    color: red
+}
+
+.chineseword {
+    display: flex;
+    justify-content: center;
+}
+
+.speller {
+    font-size: 30px;
+    text-align: center;
+}

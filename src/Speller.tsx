@@ -15,15 +15,13 @@ export default function Speller({spelledKeys, textToType, pinyinAcc, pinyinRoman
     const isFinish = spelledKeys.length === textToType.length // When spelledKeys === textoToType (because it already contains mode)
     //const charColors = spelledKeys.map((sKey, i) => sKey.inputKey === sKey.correctKey ? "blue" : "red" )
     const charColors = correctMap.map(isCorrect => isCorrect ? "blue" : "red" )
-    const isFinishLetters = spelledKeys.length === pinyinAcc.length
-    const isAccent = !isNaN(parseInt(textToType.slice(-1)))
     const isThereNumber = mode === "withTones" || mode === "onlyTones"
     const isOnlyTones = mode === "onlyTones"
 
 
     return (
-        <div>
-            {isFinish && <div>done!!</div>}
+        <div className="speller">
+            
 
             {!isFinish && isOnlyTones && <span>{pinyinRoman}</span> }
             
@@ -44,7 +42,8 @@ export default function Speller({spelledKeys, textToType, pinyinAcc, pinyinRoman
                 )
             })}
             {isReveal && <span style={{color: "GrayText"}}>{textToType.slice(spelledKeys.length, textToType.length)}</span> }
-            
+           
+           {isFinish && <div>done!!</div>}
 
         </div>
     )

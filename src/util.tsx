@@ -1,8 +1,17 @@
 import { HanziPinyin, SpelledKey } from "./types";
+import keypressSound from "./assets/typewriterkeypress.wav"
+import typewriterSound from "./assets/nicetypewriterkeypress.wav"
+import mistakeSound from "./assets/mistake.wav"
+import winSound from "./assets/correctpass.wav"
+import oldKeyboardSound from "./assets/oldkeyboardpress.wav"
+import hardtyewriterhitSound from "./assets/hardtypewriterhit.wav"
 
-
-
-export function getWordArray(wordHanzi: [string, string], wordPinyinAccented: string, wordPinyinNumbered: string, mode: string) {
+export function getWordArray(
+    wordHanzi: [string, string], 
+    wordPinyinAccented: string, 
+    wordPinyinNumbered: string, 
+    mode: string)
+        : HanziPinyin[] {
     // Cleaning process: remove spaces, remove " ' " mark, everything to lowercase
     const wordPinyinNo_clean = wordPinyinNumbered.replace(/[\s']/g, "").toLowerCase()
     const wordPinyinAcc_clean = wordPinyinAccented.replace(/[\s']/g, "").toLowerCase()
@@ -63,7 +72,7 @@ export function sylibalizeInput(hanziPinyinArrayWord: HanziPinyin[], inputKeys: 
     const textToTypeArr = hanziPinyinArrayWord.map(syl => syl.textToType_Syl)
     let index_start = 0
     // const inputKeys_input = inputKeys.map(spell => spell.inputKey)
-    let inputSylArray: any = [] // try Define as array of arrays of SpelledKey-type elements
+    let inputSylArray: SpelledKey[][] = [] 
     for (let index = 0; index < sylNo; index++) {
         let sylSlice = inputKeys.slice(
                 index_start,
@@ -98,4 +107,20 @@ export function getDynamicIndex(inputSylArray: any[], textToTypeSyl_Array: strin
 
     // When sylable has not been yet typed completely
     return normalIndex
+}
+
+export function playSound(sound: string) {
+    new Audio(sound).play()
+}
+
+export function playKeypressFX() {
+    new Audio(hardtyewriterhitSound).play()
+}
+
+export function playMistakeFX() {
+    new Audio(mistakeSound).play()
+}
+
+export function playWinFX() {
+    new Audio(winSound).play()
 }
