@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import hsk3 from './hsk-3.json'
 import ChineseWord from "./ChineseWord"
-import { SpelledKey } from "./types"
+import { SpelledKey, Setting } from "./types"
 import { getDynamicIndex, getWordArray, sylibalizeInput } from "./util"
 import Settings from "./Settings"
 
@@ -17,10 +17,11 @@ function App() {
   const [mistakes, setMistakes] = useState<string[]>([])
   const [revealNos, setRevealNos] = useState<number[]>([])
   // Settings
-  const [settings, setSettings] = useState({mode: "noTones", mistakeCountTolerance: 2})
+  const [settings, setSettings] = useState<Setting>({mode: "noTones", mistakeCountTolerance: 2, traditional: false, easyMode: false})
   const mistakeCountTolerance = settings.mistakeCountTolerance
   const mode = settings.mode
-  const traditional = false
+  const traditional = settings.traditional
+  const easyMode = settings.easyMode
   // hanziPinyinArrayWord, textToType // Once every new word
   const [hanziPinyinArrayWord, textToType, textToTypeSyl_Array] = useMemo(() => {
     const word = randomHSK["translation-data"]
@@ -68,7 +69,7 @@ function App() {
 
   useEffect(() => {
     // # Move this oustide
-    if (mistakes.length >= mistakeCountTolerance) {
+    if (mistakes.length >= mistakeCountTolerance && mistakeCountTolerance) {
       const index = inputKeys.length
       const textAhead = textToType.slice(index+1, index+1 + mistakeCountTolerance)
       const mistakesFromAbsent = mistakes.slice(0, mistakeCountTolerance)
@@ -126,6 +127,7 @@ function App() {
     }
   }, [inputKeys, mistakes, revealNos])
 
+
   useEffect(() => {
     setRevealNos([])
   }, [dynamicIndex])
@@ -143,7 +145,7 @@ function App() {
         setRandomHSK(getRandomHSK())
         setRevealNos([])
       } else {
-        if (mistakes.length > 0 || dynamicIndex === inputSylArray.length - 1) {
+        if (mistakes.length > 0 || dynamicIndex === inputSylArray.length - 1 && !easyMode) {
           setRevealNos([dynamicIndex])
         }
         
@@ -158,6 +160,7 @@ function App() {
 
   }, [inputKeys, mistakes])
 
+
   return (
     <div>
       <Settings setInputKeys={setInputKeys}
@@ -165,6 +168,7 @@ function App() {
                 getRandomHSK={getRandomHSK}
                 setRevealNos={setRevealNos}
                 setSettings={setSettings}
+                settings={settings}
       />
       <h1>
         {inputKeys.map((c, i) => {
@@ -180,6 +184,7 @@ function App() {
         traditional={traditional}
         textToTypeSyl_Array={textToTypeSyl_Array}
         revealNos={revealNos}
+        easyMode={easyMode}
         mode={mode}
       />
     </div>

@@ -20,6 +20,7 @@ export default function Speller({spelledKeys, textToType, pinyinAcc, pinyinRoman
     const isThereNumber = mode === "withTones" || mode === "onlyTones"
     const isOnlyTones = mode === "onlyTones"
 
+
     return (
         <div>
             {isFinish && <div>done!!</div>}

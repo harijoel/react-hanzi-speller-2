@@ -9,6 +9,7 @@ type ChineseWordProps = {
     traditional: boolean
     textToTypeSyl_Array: string[]
     revealNos: number[]
+    easyMode: boolean
     mode: string
 }
 
@@ -18,6 +19,7 @@ export default function ChineseWord({
     traditional, 
     textToTypeSyl_Array, 
     revealNos, 
+    easyMode,
     mode }: ChineseWordProps) {
 
     const dynamicIndex = getDynamicIndex(inputSylArray, textToTypeSyl_Array)
@@ -31,7 +33,7 @@ export default function ChineseWord({
                     spelledKeys={inputSylArray[i]}
                     traditional={traditional}
                     active={dynamicIndex === i}
-                    isReveal={revealNos.includes(i)}
+                    isReveal={revealNos.includes(i) || easyMode}
                     mode={mode}
                 />
                 )

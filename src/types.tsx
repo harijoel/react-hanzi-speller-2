@@ -9,3 +9,10 @@ export type HanziPinyin = {
     pinyinAcc: string
     textToType_Syl: string
   }
+
+export type Setting = {
+  mode: string
+  mistakeCountTolerance: number
+  traditional: boolean
+  easyMode: boolean
+}
