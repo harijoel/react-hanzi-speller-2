@@ -24,7 +24,7 @@ export default function Hanzi({hanziPinyinChar, spelledKeys=[], traditional, act
     return (
         <div>
             <div>{active ? "A" : "o" }</div>
-            <div style={{color: isThereAnyMistake ? "red" : "black"}}>
+            <div style={{color: isThereAnyMistake ? "red" : "black"}} className="hanzi" >
                 {character}
             </div>
             <Speller spelledKeys={spelledKeys} 

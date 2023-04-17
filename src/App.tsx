@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import hsk3 from './hsk-3.json'
 import ChineseWord from "./ChineseWord"
 import { SpelledKey } from "./types"
 import { getDynamicIndex, getWordArray, sylibalizeInput } from "./util"
+import Settings from "./Settings"
 
 
 function getRandomHSK() {
@@ -16,9 +17,10 @@ function App() {
   const [mistakes, setMistakes] = useState<string[]>([])
   const [revealNos, setRevealNos] = useState<number[]>([])
   // Settings
-  const mistakeCountTolerance = 2
-  const mode = "noTones"
-  const traditional = true
+  const [settings, setSettings] = useState({mode: "noTones", mistakeCountTolerance: 2})
+  const mistakeCountTolerance = settings.mistakeCountTolerance
+  const mode = settings.mode
+  const traditional = false
   // hanziPinyinArrayWord, textToType // Once every new word
   const [hanziPinyinArrayWord, textToType, textToTypeSyl_Array] = useMemo(() => {
     const word = randomHSK["translation-data"]
@@ -158,6 +160,12 @@ function App() {
 
   return (
     <div>
+      <Settings setInputKeys={setInputKeys}
+                setRandomHSK={setRandomHSK}
+                getRandomHSK={getRandomHSK}
+                setRevealNos={setRevealNos}
+                setSettings={setSettings}
+      />
       <h1>
         {inputKeys.map((c, i) => {
           const color = c.correctKey == c.inputKey ? "blue" : "red"
