@@ -122,5 +122,7 @@ export function playMistakeFX() {
 }
 
 export function playWinFX() {
-    new Audio(winSound).play()
+    const sound = new Audio(winSound)
+    sound.volume = 0.3
+    sound.play()
 }

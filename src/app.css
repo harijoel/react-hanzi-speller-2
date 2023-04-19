@@ -8,15 +8,19 @@
 
 .hanzi {
     display: inline;
-    color: green
+    text-align: center;
+    margin: 5px;
+    border: 2px solid rgb(208, 226, 225);
+    border-radius: 15px;
 }
 
 .character {
     font-size: 90px;
+    width: 125px;
 }
 
 .mistake {
-    color: red
+    color: red;
 }
 
 .chineseword {
@@ -26,5 +30,15 @@
 
 .speller {
     font-size: 30px;
-    text-align: center;
+    padding-bottom: 10px;
+}
+
+.temporal-space {
+    visibility: hidden;
+}
+
+.btn {
+    background-color: blue;
+    color: white;
+    cursor: pointer;
 }

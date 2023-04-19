@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import hsk3 from './hsk-3.json'
+import hsk from './hsk-vocabulary/hsk-6.json'
 import ChineseWord from "./ChineseWord"
 import Settings from "./Settings"
 import { SpelledKey, Setting, HSKword } from "./types"
@@ -9,25 +9,25 @@ import './app.css'
 
 
 function getRandomHSK(): HSKword {
-  const random_HSK_vocab_id = Math.floor(Math.random() * hsk3.words.length)
-  return hsk3.words[random_HSK_vocab_id]
+  const random_HSK_vocab_id = Math.floor(Math.random() * hsk.words.length)
+  return hsk.words[random_HSK_vocab_id]
 }
 
 function App() {
   const [hskWord, setHskWord] = useState<HSKword>(getRandomHSK)
   const [inputKeys, setInputKeys] = useState<SpelledKey[]>([])
-  const [mistakes, setMistakes] = useState<string[]>([])
+  const [mistakeTrail, setMistakeTrail] = useState<string[]>([])
   const [revealNos, setRevealNos] = useState<number[]>([])
   // Settings
   const [settings, setSettings] = useState<Setting>({
     mode: "noTones", 
     mistakeCountTolerance: 2, 
-    traditional: false, 
-    easyMode: false })
+    traditional: true, 
+    showAns: false })
   const mistakeCountTolerance = settings.mistakeCountTolerance
   const mode = settings.mode
   const traditional = settings.traditional
-  const easyMode = settings.easyMode
+  const showAns = settings.showAns
   // hanziPinyinArrayWord, textToType // Once every new word
   const [hanziPinyinArrayWord, textToType, textToTypeSyl_Array] = useMemo(() => {
     const word = hskWord["translation-data"]
@@ -39,12 +39,12 @@ function App() {
     const textToTypeSyl_Array = hanziPinyinArrayWord.map(syl => syl.textToType_Syl)
     const textToType = textToTypeSyl_Array.join("").split("")
     return [hanziPinyinArrayWord, textToType, textToTypeSyl_Array]
-  }, [hskWord])
+  }, [hskWord, mode])
 
   // Pinyinize input
   const inputSylArray = useMemo(() => {
     return sylibalizeInput(hanziPinyinArrayWord, inputKeys)
-  }, [inputKeys])
+  }, [inputKeys, mode])
   console.log(inputSylArray)
 
   // Is Spelling over & Dynamic Index
@@ -60,23 +60,23 @@ function App() {
         [...currentSpelledKeys,  
         { inputKey: 
           !revealNos.length // if not reveal mode
-            ? (mistakes.length // if there is mistake
-              ? mistakes[0]    // dispaly that mistake
+            ? (mistakeTrail.length // if there is mistake
+              ? mistakeTrail[0]    // dispaly that mistake
               : key)           // else diaplay correct
             : "missing",    // display missing mistake
         correctKey: key //textToType[currentSpelledKeys.length]
         }])
-      setMistakes([])
+      setMistakeTrail([])
     },
-    [inputKeys, mistakes, revealNos]
+    [inputKeys, mistakeTrail, revealNos, mode]
   )
 
   useEffect(() => {
-    if (mistakes.length >= mistakeCountTolerance && mistakeCountTolerance) {
+    if (mistakeTrail.length >= mistakeCountTolerance && mistakeCountTolerance) {
       const index = inputKeys.length
       // Define trail patterns
-      const mistakesFromAbsent = mistakes.slice(0, mistakeCountTolerance)
-      const mistakesFromMistype = mistakes.slice(1, mistakeCountTolerance + 1)
+      const mistakesFromAbsent = mistakeTrail.slice(0, mistakeCountTolerance)
+      const mistakesFromMistype = mistakeTrail.slice(1, mistakeCountTolerance + 1)
       // Get correct text ahead
       const textAhead = textToType.slice(index+1, index+1 + mistakeCountTolerance)
       const remainingInputKeys: SpelledKey[] = textAhead.map(
@@ -85,7 +85,7 @@ function App() {
         })
       
       // Compare text ahead with trail patterns
-      let inputKey = mistakes[0]
+      let inputKey = mistakeTrail[0]
       let patternFound = false
         // case: Absent key
       if (JSON.stringify(mistakesFromAbsent) === JSON.stringify(textAhead)) {
@@ -94,7 +94,7 @@ function App() {
       }
         // case: Mistyped key
       if (JSON.stringify(mistakesFromMistype) === JSON.stringify(textAhead)) {
-        inputKey = mistakes[0]
+        inputKey = mistakeTrail[0]
         patternFound = true
       }
       // Display correct text ahead if pattern is found in mistake trail
@@ -105,10 +105,10 @@ function App() {
                                             wrongInputKey,
                                             ...remainingInputKeys]
                                             )
-        setMistakes([])
+        setMistakeTrail([])
         }
     }
-  }, [mistakes])
+  }, [mistakeTrail, mode])
 
 
   useEffect(() => {
@@ -123,8 +123,8 @@ function App() {
       } 
       else {
         playMistakeFX()
-        setMistakes(oldMistakes => [...oldMistakes, key])
-        console.log(mistakes.length)
+        setMistakeTrail(oldMistakeTrail => [...oldMistakeTrail, key])
+        console.log(mistakeTrail.length)
       }
       
     }
@@ -133,12 +133,12 @@ function App() {
     return () => {
       document.removeEventListener("keypress", handler)
     }
-  }, [inputKeys, mistakes, revealNos])
+  }, [inputKeys, mistakeTrail, revealNos, mode])
 
 
   useEffect(() => {
     setRevealNos([])
-  }, [dynamicIndex])
+  }, [dynamicIndex, mode])
 
   // Handle 'Enter' keypress
   useEffect(() => {
@@ -152,8 +152,9 @@ function App() {
         setInputKeys([])
         setHskWord(getRandomHSK())
         setRevealNos([])
+        setMistakeTrail([])
       } else {
-        if (mistakes.length > 0 || dynamicIndex === inputSylArray.length - 1 && !easyMode) {
+        if (mistakeTrail.length > 0 || dynamicIndex === inputSylArray.length - 1 && !showAns) {
           setRevealNos([dynamicIndex])
         } 
       }
@@ -162,7 +163,7 @@ function App() {
     return () => {
       document.removeEventListener("keypress", handler)
     }
-  }, [inputKeys, mistakes])
+  }, [inputKeys, mistakeTrail, mode])
 
 
   return (
@@ -172,7 +173,9 @@ function App() {
                 setHskWord={setHskWord}
                 getRandomHSK={getRandomHSK}
                 setRevealNos={setRevealNos}
+                setMistakeTrail={setMistakeTrail}
                 setSettings={setSettings}
+                settings={settings}
       />
       <h1>
         {!inputKeys.length && "##"}
@@ -183,13 +186,14 @@ function App() {
               )})
         }
       </h1>
-      <ChineseWord 
+      <h2>{hskWord["translation-data"].english}</h2>
+      <ChineseWord
         hanziPinyinArrayWord={hanziPinyinArrayWord} 
         inputSylArray={inputSylArray}
         traditional={traditional}
         textToTypeSyl_Array={textToTypeSyl_Array}
         revealNos={revealNos}
-        easyMode={easyMode}
+        showAns={showAns}
         mode={mode}
       />
     </div>

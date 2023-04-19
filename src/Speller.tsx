@@ -43,7 +43,7 @@ export default function Speller({spelledKeys, textToType, pinyinAcc, pinyinRoman
             })}
             {isReveal && <span style={{color: "GrayText"}}>{textToType.slice(spelledKeys.length, textToType.length)}</span> }
            
-           {isFinish && <div>done!!</div>}
+           {!spelledKeys.length && !isReveal && <div className="temporal-space">#</div>}
 
         </div>
     )

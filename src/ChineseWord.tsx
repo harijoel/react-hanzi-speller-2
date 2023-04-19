@@ -4,22 +4,24 @@ import Hanzi from './Hanzi'
 import { getDynamicIndex } from './util'
 
 type ChineseWordProps = {
+    translation?: string
     hanziPinyinArrayWord: HanziPinyin[]
     inputSylArray: SpelledKey[][]
     traditional: boolean
     textToTypeSyl_Array: string[]
     revealNos: number[]
-    easyMode: boolean
+    showAns: boolean
     mode: string
 }
 
 export default function ChineseWord({ 
+    translation,
     hanziPinyinArrayWord, 
     inputSylArray, 
     traditional, 
     textToTypeSyl_Array, 
     revealNos, 
-    easyMode,
+    showAns,
     mode }: ChineseWordProps) {
 
     const dynamicIndex = getDynamicIndex(inputSylArray, textToTypeSyl_Array)
@@ -33,7 +35,7 @@ export default function ChineseWord({
                     spelledKeys={inputSylArray[i]}
                     traditional={traditional}
                     active={dynamicIndex === i}
-                    isReveal={revealNos.includes(i) || easyMode}
+                    isReveal={revealNos.includes(i) || showAns}
                     mode={mode}
                 />
                 )

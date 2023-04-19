@@ -14,14 +14,14 @@ export type Setting = {
   mode: string
   mistakeCountTolerance: number
   traditional: boolean
-  easyMode: boolean
+  showAns: boolean
 }
 
 export type HSKword = {
   metadata: {
-      id: string;
-      learned: boolean;
-      description: string;
+      id: string | number;
+      learned?: boolean;
+      description?: string;
   };
   "translation-data": {
       english: string;
