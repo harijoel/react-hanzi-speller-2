@@ -8,11 +8,12 @@ type SpellerProps = {
     pinyinRoman: string
     correctMap: boolean[]
     isReveal: boolean
+    isFlip: boolean
     mode: string
 }
 
-export default function Speller({spelledKeys, textToType, pinyinAcc, pinyinRoman, correctMap, isReveal, mode}: SpellerProps) {
-    const isFinish = spelledKeys.length === textToType.length // When spelledKeys === textoToType (because it already contains mode)
+export default function Speller({spelledKeys, textToType, pinyinAcc, pinyinRoman, correctMap, isReveal, isFlip, mode}: SpellerProps) {
+    const isFinish = spelledKeys.length >= textToType.length // When spelledKeys === textoToType (because it already contains mode)
     //const charColors = spelledKeys.map((sKey, i) => sKey.inputKey === sKey.correctKey ? "blue" : "red" )
     const charColors = correctMap.map(isCorrect => isCorrect ? "blue" : "red" )
     const isThereNumber = mode === "withTones" || mode === "onlyTones"
@@ -20,7 +21,7 @@ export default function Speller({spelledKeys, textToType, pinyinAcc, pinyinRoman
 
 
     return (
-        <div className="speller">
+        <div className={`speller ${isFlip ? "#back" : ""}`}>
             
 
             {!isFinish && isOnlyTones && <span>{pinyinRoman}</span> }

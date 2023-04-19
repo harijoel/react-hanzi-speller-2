@@ -71,12 +71,14 @@ export function sylibalizeInput(hanziPinyinArrayWord: HanziPinyin[], inputKeys: 
     const sylNo = hanziPinyinArrayWord.length
     const textToTypeArr = hanziPinyinArrayWord.map(syl => syl.textToType_Syl)
     let index_start = 0
+    
     // const inputKeys_input = inputKeys.map(spell => spell.inputKey)
     let inputSylArray: SpelledKey[][] = [] 
     for (let index = 0; index < sylNo; index++) {
+        let extraKey = index === sylNo - 1 ? 1 : 0 // if last syl
         let sylSlice = inputKeys.slice(
                 index_start,
-                index_start + textToTypeArr[index].length
+                index_start + textToTypeArr[index].length + extraKey
         )
         if (!sylSlice.length) {
             break; }

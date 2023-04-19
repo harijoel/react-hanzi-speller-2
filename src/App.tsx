@@ -14,20 +14,25 @@ function getRandomHSK(): HSKword {
 }
 
 function App() {
+  // State variables
   const [hskWord, setHskWord] = useState<HSKword>(getRandomHSK)
   const [inputKeys, setInputKeys] = useState<SpelledKey[]>([])
   const [mistakeTrail, setMistakeTrail] = useState<string[]>([])
   const [revealNos, setRevealNos] = useState<number[]>([])
-  // Settings
+  // Settings: default
   const [settings, setSettings] = useState<Setting>({
     mode: "noTones", 
     mistakeCountTolerance: 2, 
     traditional: true, 
-    showAns: false })
+    showAns: false,
+    hideChars: false,
+    showEnglish: true,
+    animations: true })
   const mistakeCountTolerance = settings.mistakeCountTolerance
   const mode = settings.mode
   const traditional = settings.traditional
   const showAns = settings.showAns
+  const hideChars = settings.hideChars
   // hanziPinyinArrayWord, textToType // Once every new word
   const [hanziPinyinArrayWord, textToType, textToTypeSyl_Array] = useMemo(() => {
     const word = hskWord["translation-data"]
@@ -42,19 +47,20 @@ function App() {
   }, [hskWord, mode])
 
   // Pinyinize input
-  const inputSylArray = useMemo(() => {
+  let inputSylArray = useMemo(() => {
     return sylibalizeInput(hanziPinyinArrayWord, inputKeys)
   }, [inputKeys, mode])
   console.log(inputSylArray)
 
   // Is Spelling over & Dynamic Index
-  const isSpellingOver = inputKeys.length === textToType.length
+  const isSpellingOver = inputKeys.length === textToType.length //|| inputKeys.length === textToType.length + 1
+  const isSpellingOverAndExtraKey = inputKeys.length > textToType.length
   const dynamicIndex = getDynamicIndex(inputSylArray, textToTypeSyl_Array)
   // ##  End of dependent variables  ## //
 
-
+  // Add input key functionality
   const addInputKey = useCallback(
-    (key: string) => {
+    (key: string, mistakeTrail: string[]) => {
       playKeypressFX()
       setInputKeys(currentSpelledKeys => 
         [...currentSpelledKeys,  
@@ -71,6 +77,7 @@ function App() {
     [inputKeys, mistakeTrail, revealNos, mode]
   )
 
+  // Pattern detector
   useEffect(() => {
     if (mistakeTrail.length >= mistakeCountTolerance && mistakeCountTolerance) {
       const index = inputKeys.length
@@ -110,18 +117,19 @@ function App() {
     }
   }, [mistakeTrail, mode])
 
-
+  // Handle 'Keypress' & router
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const key = e.key
 
       if (!key.match(/^[a-z0-9]$/)) return
-
+      // Handle Correct keypress
       e.preventDefault
       if (key === textToType[inputKeys.length]) {
-        addInputKey(key)
+        addInputKey(key, mistakeTrail)
       } 
       else {
+      // Handle Incorrect keypress
         playMistakeFX()
         setMistakeTrail(oldMistakeTrail => [...oldMistakeTrail, key])
         console.log(mistakeTrail.length)
@@ -135,7 +143,14 @@ function App() {
     }
   }, [inputKeys, mistakeTrail, revealNos, mode])
 
+  // Handle extra keypress
+  useEffect(() => {
+    if (isSpellingOver && mistakeTrail.length) {
+      setInputKeys(oldInputKeys => [...oldInputKeys, {inputKey: mistakeTrail[0], correctKey: "#"}])
+    }
+  }, [isSpellingOver, mistakeTrail])
 
+  // Turn off reveal when jump to other character
   useEffect(() => {
     setRevealNos([])
   }, [dynamicIndex, mode])
@@ -147,13 +162,14 @@ function App() {
       e.preventDefault
 
       // Start new word if game is over
-      if (isSpellingOver) {
+      if (isSpellingOver || isSpellingOverAndExtraKey) {
         playWinFX()
         setInputKeys([])
         setHskWord(getRandomHSK())
         setRevealNos([])
         setMistakeTrail([])
       } else {
+      // Show answer if game is not over
         if (mistakeTrail.length > 0 || dynamicIndex === inputSylArray.length - 1 && !showAns) {
           setRevealNos([dynamicIndex])
         } 
@@ -163,7 +179,7 @@ function App() {
     return () => {
       document.removeEventListener("keypress", handler)
     }
-  }, [inputKeys, mistakeTrail, mode])
+  }, [dynamicIndex, mistakeTrail.length, isSpellingOver, isSpellingOverAndExtraKey])
 
 
   return (
@@ -186,16 +202,20 @@ function App() {
               )})
         }
       </h1>
-      <h2>{hskWord["translation-data"].english}</h2>
+      <div className="chinesewordT"><div className="hanziT flip"><div className="characterT">五</div><div className="st back">lorem</div></div></div>
       <ChineseWord
         hanziPinyinArrayWord={hanziPinyinArrayWord} 
         inputSylArray={inputSylArray}
+        dynamicIndex={dynamicIndex}
         traditional={traditional}
         textToTypeSyl_Array={textToTypeSyl_Array}
         revealNos={revealNos}
         showAns={showAns}
+        hideChars={hideChars}
         mode={mode}
       />
+      <h2 style={{textAlign: "center"}}>{hskWord["translation-data"].english}</h2>
+
     </div>
     
   )

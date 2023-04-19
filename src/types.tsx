@@ -15,6 +15,9 @@ export type Setting = {
   mistakeCountTolerance: number
   traditional: boolean
   showAns: boolean
+  hideChars: boolean
+  showEnglish: boolean
+  animations: boolean
 }
 
 export type HSKword = {

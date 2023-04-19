@@ -6,31 +6,56 @@
     display: inline;
 }
 
-.hanzi {
-    display: inline;
+.chineseword, .chinesewordT {
+    display: flex;
+    justify-content: center;
+}
+
+.hanzi, .hanziT {
     text-align: center;
     margin: 5px;
     border: 2px solid rgb(208, 226, 225);
     border-radius: 15px;
+
+    transform: perspective(1000px) rotateY(var(--rotate-y, 0));
+    transform-style: preserve-3d;
+    transition: 200ms
 }
 
-.character {
+.hanzi.flip {
+    --rotate-y: 180deg;
+}
+.hanziT.flip {
+    --rotate-y: 180deg;
+}
+
+.back {
+    transform: rotateY(180deg);
+}
+
+.character, .characterT {
     font-size: 90px;
     width: 125px;
+    backface-visibility: hidden;
+}
+
+
+.hanziT .back {
+    transform: rotateY(180deg);
 }
 
 .mistake {
     color: red;
 }
 
-.chineseword {
-    display: flex;
-    justify-content: center;
-}
+
 
 .speller {
+    position: relative;
+    top: -1.8em;
     font-size: 30px;
     padding-bottom: 10px;
+    text-align: center;
 }
 
 .temporal-space {
