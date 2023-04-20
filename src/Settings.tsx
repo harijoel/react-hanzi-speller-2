@@ -41,46 +41,20 @@ export default function Settings({
     }
     // Hide-check dependent
     function handleHideCheck(e: ChangeEvent<HTMLInputElement>) {
+        const isHideCharsChecked = e.target.checked
+        const propKey = isHideCharsChecked ? "showEnglish" : "animations"
+        const propValue = isHideCharsChecked
         setSettings((oldSettings: Setting) => { 
-            const isHideCharsChecked = e.target.checked
-            if (isHideCharsChecked) {
-                return {
-                    ...oldSettings,
-                    hideChars: isHideCharsChecked,
-                    showEnglish: true}
-            } 
-            return {
-                ...oldSettings,
-                    hideChars: isHideCharsChecked,
-                    animations: false
-            }
-            
+            oldSettings[propKey] = propValue
+            return {...oldSettings, hideChars: isHideCharsChecked}
             })
     }
 
-    function handleShowEnglishCheck(e: ChangeEvent<HTMLInputElement>) {
-        setSettings((oldSettings: Setting) => { return {
-            ...oldSettings,
-            showEnglish: e.target.checked }})
-    }
-
-    function handleAnimationsCheck(e: ChangeEvent<HTMLInputElement>) {
-        setSettings((oldSettings: Setting) => { return {
-            ...oldSettings,
-            animations: e.target.checked }})
-    }
-
-    // End hide-check dependent
-    function handleTradCheck(e: ChangeEvent<HTMLInputElement>) {
-        setSettings((oldSettings: Setting) => { return {
-            ...oldSettings,
-            traditional: e.target.checked }})
-    }
-
-    function handleShowAnsCheck(e: ChangeEvent<HTMLInputElement>) {
-        setSettings((oldSettings: Setting) => { return {
-            ...oldSettings,
-            showAns: e.target.checked }})
+    function handleCheck(e: ChangeEvent<HTMLInputElement>) {
+        const property = e.target.name
+        setSettings((oldSettings: Setting) => { 
+            oldSettings[property] = e.target.checked
+            return {...oldSettings}})
     }
 
     function handleModeSelect(e: ChangeEvent<HTMLSelectElement>) {
@@ -103,16 +77,16 @@ export default function Settings({
         <div className="settings" >
             <div className="form-group">
                 <label htmlFor="trad">Traditional </label>
-                <input id="trad" type="checkbox" 
+                <input id="trad" type="checkbox" name="traditional"
                     checked={settings.traditional} 
-                    onChange={handleTradCheck} />
+                    onChange={handleCheck} />
             </div>
 
             <div className="form-group">
                 <label htmlFor="show-ans">Show answer </label>
-                <input id="show-ans" type="checkbox" 
+                <input id="show-ans" type="checkbox" name="showAns" 
                     checked={settings.showAns} 
-                    onChange={handleShowAnsCheck} />
+                    onChange={handleCheck} />
             </div>
 
             <div className="form-group">
@@ -134,18 +108,18 @@ export default function Settings({
 
             <div className="form-group">
                 <label htmlFor="english">Show English translation </label>
-                <input id="english" type="checkbox" 
+                <input id="english" type="checkbox" name="showEnglish"
                     checked={settings.showEnglish} 
                     disabled={settings.hideChars} 
-                    onChange={handleShowEnglishCheck}/>
+                    onChange={handleCheck}/>
             </div>
 
             <div className="form-group">
                 <label htmlFor="hide">Flip animaton </label>
-                <input id="hide" type="checkbox" 
+                <input id="hide" type="checkbox" name="animations"
                     checked={settings.animations} 
                     disabled={!settings.hideChars} 
-                    onChange={handleAnimationsCheck}/>
+                    onChange={handleCheck}/>
             </div>
 
             <div className="form-group">

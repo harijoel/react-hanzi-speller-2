@@ -128,3 +128,31 @@ export function playWinFX() {
     sound.volume = 0.3
     sound.play()
 }
+
+
+// https://missav.com/en/MISM-245
+// https://missav.com/en/Cawd-083
+// https://missav.com/en/SSNI-025
+// https://missav.com/en/miae-116
+// https://missav.com/en/MUM-115
+// https://missav.com/en/SAME-045
+// https://missav.com/en/HUNTB-520
+// https://missav.com/en/TDMN-004
+// https://missav.com/en/MISM-147
+// https://missav.com/en/PIYO-153
+// https://missav.com/en/MIAA-608
+// https://missav.com/en/PIYO-165
+// https://missav.com/en/HMN-152
+// https://missav.com/en/CJOD-216
+// https://missav.com/en/REAL-649
+// https://missav.com/en/MVSD-527
+// https://hpav.tv/
+// https://supjav.com/category/censored-jav
+// https://missav.com/en/CJOD-320
+// https://missav.com/en/TPIN-037
+// https://missav.com/en/DVRT-020
+// https://missav.com/en/FSET-600
+// https://missav.com/en/SDDE-481
+// https://missav.com/en/dasd-409
+// https://la.spankbang.com/67orn/video/dasd+409+my+father+ntred+my+girlfriend
+// https://www.google.com/search?q=yuu+shinoda&sourceid=chrome&ie=UTF-8
