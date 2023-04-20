@@ -25,7 +25,7 @@ export default function Settings({
     settings}: SettingsProps) {
 
     //const modeEl = useRef<HTMLSelectElement>(null)
-    const toleranceEl = useRef<HTMLInputElement>(null)
+    const toleranceEl = useRef<HTMLSelectElement>(null)
     //const vocabEl = useRef<HTMLSelectElement>(null)
 
     function handleSubmit(e: MouseEvent) {
@@ -117,7 +117,12 @@ export default function Settings({
 
             <div className="form-group">
                 <label htmlFor="tol">Tolerance </label>
-                <input id="tol" type="number" min={0} step={1} defaultValue={2} ref={toleranceEl} />
+                <select name="tol" id="tol" ref={toleranceEl} >
+                    {mitakeToleranceNos.map(num => 
+                        <option value={num} selected={settings.mistakeCountTolerance===num}>
+                            {num}
+                        </option>)}
+                </select>
             </div>
 
             <div className="form-group">

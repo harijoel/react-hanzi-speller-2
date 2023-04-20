@@ -3,19 +3,25 @@ import { HanziPinyin, SpelledKey } from './types'
 import Speller from './Speller'
 
 type HanziProps = {
+    onClick: any
     hanziPinyinChar: HanziPinyin
     spelledKeys?: SpelledKey[]
     traditional: boolean
     active: boolean
     isReveal: boolean
     hideChars: boolean
+    animations: boolean
     mode: string
 }
 
 export default function Hanzi({
-    hanziPinyinChar, spelledKeys=[], 
-    traditional, active=false, 
-    isReveal, hideChars, 
+    hanziPinyinChar, 
+    spelledKeys=[], 
+    traditional, 
+    active=false, 
+    isReveal, 
+    hideChars, 
+    animations,
     mode}: HanziProps) {
 
     const character = hanziPinyinChar.hanzi_SimpTrad[traditional ? 1 : 0]
@@ -26,10 +32,11 @@ export default function Hanzi({
 
     const isFinish = spelledKeys.length >= textToType.length
     const isVisible = isFinish || !hideChars || isReveal // isReveal added recently
+    const isThereAnimationClass = animations ? (!isVisible ? "flip" : "") : ""
     //style={{visibility: isVisible? "visible" : "hidden"}}
     return (
         <div>
-            <div className={`hanzi ${!isVisible ? "flip" : ""}`} >
+            <div className={`hanzi ${isThereAnimationClass}`} >
                 <div>{active ? "(*)" : "( )" }</div>
                 <div style={{
                         color: isThereAnyMistake ? "red" : "black", 

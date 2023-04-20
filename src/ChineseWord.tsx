@@ -10,9 +10,11 @@ type ChineseWordProps = {
     dynamicIndex: number
     traditional: boolean
     textToTypeSyl_Array?: string[]
+    setRevealNos: React.Dispatch<React.SetStateAction<number[]>>
     revealNos: number[]
     showAns: boolean
     hideChars: boolean
+    animations: boolean
     mode: string
 }
 
@@ -23,9 +25,11 @@ export default function ChineseWord({
     dynamicIndex, 
     traditional, 
     textToTypeSyl_Array, 
+    setRevealNos,
     revealNos, 
     showAns,
     hideChars,
+    animations,
     mode }: ChineseWordProps) {
 
 
@@ -34,12 +38,14 @@ export default function ChineseWord({
             {hanziPinyinArrayWord.map((syl, i) => 
                 <Hanzi 
                     key={"hanzi-"+syl+"-"+i}
+                    onClick={() => console.log("clicked: "+ i)}
                     hanziPinyinChar={syl}
                     spelledKeys={inputSylArray[i]}
                     traditional={traditional}
                     active={dynamicIndex === i}
                     isReveal={revealNos.includes(i) || showAns}
                     hideChars={hideChars}
+                    animations={animations}
                     mode={mode}
                 />
                 )

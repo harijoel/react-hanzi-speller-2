@@ -33,6 +33,7 @@ function App() {
   const traditional = settings.traditional
   const showAns = settings.showAns
   const hideChars = settings.hideChars
+  const animations = settings.animations
   // hanziPinyinArrayWord, textToType // Once every new word
   const [hanziPinyinArrayWord, textToType, textToTypeSyl_Array] = useMemo(() => {
     const word = hskWord["translation-data"]
@@ -171,7 +172,7 @@ function App() {
       } else {
       // Show answer if game is not over
         if (mistakeTrail.length > 0 || dynamicIndex === inputSylArray.length - 1 && !showAns) {
-          setRevealNos([dynamicIndex])
+          setRevealNos(oldRevealNos => [...oldRevealNos, dynamicIndex])
         } 
       }
     }
@@ -207,14 +208,16 @@ function App() {
         hanziPinyinArrayWord={hanziPinyinArrayWord} 
         inputSylArray={inputSylArray}
         dynamicIndex={dynamicIndex}
-        traditional={traditional}
         textToTypeSyl_Array={textToTypeSyl_Array}
+        setRevealNos={setRevealNos}
         revealNos={revealNos}
+        traditional={traditional}
         showAns={showAns}
         hideChars={hideChars}
+        animations={animations}
         mode={mode}
       />
-      <h2 style={{textAlign: "center"}}>{hskWord["translation-data"].english}</h2>
+      {settings.showEnglish && <h2 style={{textAlign: "center"}}>{hskWord["translation-data"].english}</h2>}
 
     </div>
     

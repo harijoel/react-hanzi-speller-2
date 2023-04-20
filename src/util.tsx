@@ -13,7 +13,7 @@ export function getWordArray(
     mode: string)
         : HanziPinyin[] {
     // Cleaning process: remove spaces, remove " ' " mark, everything to lowercase
-    const wordPinyinNo_clean = wordPinyinNumbered.replace(/[\s']/g, "").toLowerCase()
+    const wordPinyinNo_clean = wordPinyinNumbered.replace(/ü/g, 'v').replace(/[\s']/g, "").toLowerCase()
     const wordPinyinAcc_clean = wordPinyinAccented.replace(/[\s']/g, "").toLowerCase()
 
     // Separate string by number. Ex: "zhong1wen2" => ["zhong", "wen"]
