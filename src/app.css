@@ -1,9 +1,16 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 .settings {
-    color: purple;
+    color: black
 }
 
 .form-group {
     display: inline;
+    padding: 5px;
+    border-right: 1px solid gray;
+    font-weight: bold;
 }
 
 .chineseword, .chinesewordT {
@@ -25,8 +32,9 @@
 .hanzi.flip {
     --rotate-y: 180deg;
 }
-.hanziT.flip {
-    --rotate-y: 180deg;
+
+.hanzi.active {
+    border-color: blue;
 }
 
 .back {
@@ -39,16 +47,9 @@
     backface-visibility: hidden;
 }
 
-
-.hanziT .back {
-    transform: rotateY(180deg);
-}
-
 .mistake {
     color: red;
 }
-
-
 
 .speller {
     position: relative;
@@ -58,12 +59,18 @@
     text-align: center;
 }
 
+.reveal-text {
+    color: rgb(193, 193, 193);
+}
+
 .temporal-space {
     visibility: hidden;
 }
 
 .btn {
     background-color: blue;
+    border-radius: 5px;
+    padding: 0.4em;
     color: white;
     cursor: pointer;
     -webkit-user-select: none; /* Safari */

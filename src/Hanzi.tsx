@@ -8,6 +8,7 @@ type HanziProps = {
     spelledKeys?: SpelledKey[]
     traditional: boolean
     active: boolean
+    mistakeTrail: string[]
     isReveal: boolean
     hideChars: boolean
     animations: boolean
@@ -19,24 +20,26 @@ export default function Hanzi({
     spelledKeys=[], 
     traditional, 
     active=false, 
+    mistakeTrail,
     isReveal, 
     hideChars, 
     animations,
     mode}: HanziProps) {
 
     const character = hanziPinyinChar.hanzi_SimpTrad[traditional ? 1 : 0]
-    const textToType = hanziPinyinChar.textToType_Syl //|| "Error"
+    const textToType = hanziPinyinChar.textToType_Syl
     const correctMap = spelledKeys.map((sKey, i) => sKey.inputKey === sKey.correctKey)
     const isThereAnyMistake= correctMap.some(correct => !correct)
     const pinyinRoman = hanziPinyinChar.pinyinNo
-
-    const isFinish = spelledKeys.length >= textToType.length
+    const isFinish = spelledKeys.length >= textToType?.length
     const isVisible = isFinish || !hideChars || isReveal // isReveal added recently
-    const isThereAnimationClass = animations ? (!isVisible ? "flip" : "") : ""
+    const isThereAnimationClass = animations && !isVisible ? "flip" : "" //animations ? (!isVisible ? "flip" : "") : ""
+    const isWarning = mistakeTrail?.length && active
+    const borderColor = isWarning ? "red" : "blue"
     //style={{visibility: isVisible? "visible" : "hidden"}}
     return (
         <div>
-            <div className={`hanzi ${isThereAnimationClass}`} >
+            <div className={"hanzi " + isThereAnimationClass} style={{borderColor: active ? borderColor : ""}}>
                 <div>{active ? "(*)" : "( )" }</div>
                 <div style={{
                         color: isThereAnyMistake ? "red" : "black", 

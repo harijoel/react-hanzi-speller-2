@@ -12,6 +12,7 @@ type ChineseWordProps = {
     textToTypeSyl_Array?: string[]
     setRevealNos: React.Dispatch<React.SetStateAction<number[]>>
     revealNos: number[]
+    mistakeTrail: string[]
     showAns: boolean
     hideChars: boolean
     animations: boolean
@@ -27,6 +28,7 @@ export default function ChineseWord({
     textToTypeSyl_Array, 
     setRevealNos,
     revealNos, 
+    mistakeTrail,
     showAns,
     hideChars,
     animations,
@@ -43,6 +45,7 @@ export default function ChineseWord({
                     spelledKeys={inputSylArray[i]}
                     traditional={traditional}
                     active={dynamicIndex === i}
+                    mistakeTrail={mistakeTrail}
                     isReveal={revealNos.includes(i) || showAns}
                     hideChars={hideChars}
                     animations={animations}

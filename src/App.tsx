@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import hsk from './hsk-vocabulary/hsk-6.json'
+import hsk from './hsk-vocabulary/hsk-5.json'
 import ChineseWord from "./ChineseWord"
 import Settings from "./Settings"
 import { SpelledKey, Setting, HSKword } from "./types"
@@ -23,7 +23,7 @@ function App() {
   const [settings, setSettings] = useState<Setting>({
     mode: "noTones", 
     mistakeCountTolerance: 2, 
-    traditional: true, 
+    traditional: false, 
     showAns: false,
     hideChars: false,
     showEnglish: true,
@@ -56,6 +56,7 @@ function App() {
   // Is Spelling over & Dynamic Index
   const isSpellingOver = inputKeys.length === textToType.length //|| inputKeys.length === textToType.length + 1
   const isSpellingOverAndExtraKey = inputKeys.length > textToType.length
+  const normalIndex = inputSylArray.length - 1
   const dynamicIndex = getDynamicIndex(inputSylArray, textToTypeSyl_Array)
   // ##  End of dependent variables  ## //
 
@@ -170,8 +171,9 @@ function App() {
         setRevealNos([])
         setMistakeTrail([])
       } else {
-      // Show answer if game is not over
-        if (mistakeTrail.length > 0 || dynamicIndex === inputSylArray.length - 1 && !showAns) {
+      // Show answer if game is not over & at least one keypress of any kind
+        if (mistakeTrail.length > 0 || dynamicIndex === normalIndex && !showAns ) {
+          playMistakeFX()
           setRevealNos(oldRevealNos => [...oldRevealNos, dynamicIndex])
         } 
       }
@@ -180,7 +182,7 @@ function App() {
     return () => {
       document.removeEventListener("keypress", handler)
     }
-  }, [dynamicIndex, mistakeTrail.length, isSpellingOver, isSpellingOverAndExtraKey])
+  }, [dynamicIndex, mistakeTrail.length, isSpellingOver, isSpellingOverAndExtraKey, normalIndex])
 
 
   return (
@@ -211,6 +213,7 @@ function App() {
         textToTypeSyl_Array={textToTypeSyl_Array}
         setRevealNos={setRevealNos}
         revealNos={revealNos}
+        mistakeTrail={mistakeTrail}
         traditional={traditional}
         showAns={showAns}
         hideChars={hideChars}

@@ -3,7 +3,7 @@ import { SpelledKey } from './types'
 
 type SpellerProps = {
     spelledKeys: SpelledKey[]
-    textToType: string
+    textToType?: string
     pinyinAcc: string
     pinyinRoman: string
     correctMap: boolean[]
@@ -12,8 +12,8 @@ type SpellerProps = {
     mode: string
 }
 
-export default function Speller({spelledKeys, textToType, pinyinAcc, pinyinRoman, correctMap, isReveal, isFlip, mode}: SpellerProps) {
-    const isFinish = spelledKeys.length >= textToType.length // When spelledKeys === textoToType (because it already contains mode)
+export default function Speller({spelledKeys, textToType="", pinyinAcc, pinyinRoman, correctMap, isReveal, isFlip, mode}: SpellerProps) {
+    const isFinish = spelledKeys.length >= textToType?.length // When spelledKeys === textoToType (because it already contains mode)
     //const charColors = spelledKeys.map((sKey, i) => sKey.inputKey === sKey.correctKey ? "blue" : "red" )
     const charColors = correctMap.map(isCorrect => isCorrect ? "blue" : "red" )
     const isThereNumber = mode === "withTones" || mode === "onlyTones"
@@ -42,7 +42,7 @@ export default function Speller({spelledKeys, textToType, pinyinAcc, pinyinRoman
                     </>
                 )
             })}
-            {isReveal && <span style={{color: "GrayText"}}>{textToType.slice(spelledKeys.length, textToType.length)}</span> }
+            {isReveal && <span className="reveal-text">{textToType.slice(spelledKeys.length, textToType.length)}</span> }
            
            {!spelledKeys.length && !isReveal && <div className="temporal-space">#</div>}
 

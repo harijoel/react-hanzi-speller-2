@@ -42,11 +42,11 @@ export default function Settings({
     // Hide-check dependent
     function handleHideCheck(e: ChangeEvent<HTMLInputElement>) {
         const isHideCharsChecked = e.target.checked
-        const propKey = isHideCharsChecked ? "showEnglish" : "animations"
-        const propValue = isHideCharsChecked
         setSettings((oldSettings: Setting) => { 
-            oldSettings[propKey] = propValue
-            return {...oldSettings, hideChars: isHideCharsChecked}
+            return {...oldSettings, 
+                showEnglish: isHideCharsChecked || oldSettings.showEnglish, 
+                hideChars: isHideCharsChecked, 
+                animations: isHideCharsChecked}
             })
     }
 
@@ -91,9 +91,9 @@ export default function Settings({
 
             <div className="form-group">
                 <label htmlFor="tol">Tolerance </label>
-                <select name="tol" id="tol" ref={toleranceEl} >
+                <select name="tol" id="tol" ref={toleranceEl} defaultValue={2}>
                     {mitakeToleranceNos.map(num => 
-                        <option value={num} selected={settings.mistakeCountTolerance===num}>
+                        <option key={"tol-"+num} value={num}>
                             {num}
                         </option>)}
                 </select>
@@ -115,8 +115,8 @@ export default function Settings({
             </div>
 
             <div className="form-group">
-                <label htmlFor="hide">Flip animaton </label>
-                <input id="hide" type="checkbox" name="animations"
+                <label htmlFor="flip">Flip animaton </label>
+                <input id="flip" type="checkbox" name="animations"
                     checked={settings.animations} 
                     disabled={!settings.hideChars} 
                     onChange={handleCheck}/>
@@ -125,15 +125,16 @@ export default function Settings({
             <div className="form-group">
                 <label htmlFor="mode">Mode: </label>
                 <select name="mode" id="mode" 
+                    defaultValue={settings.mode}
                     onChange={handleModeSelect} >
-                        {modes.map(modeName => <option value={modeName}>{modeName}</option>)}
+                        {modes.map(modeName => <option key={modeName} value={modeName}>{modeName}</option>)}
                 </select>
             </div>
 
             <div className="form-group">
                 <label htmlFor="vocab">HSK Vocabulary: </label>
-                <select name="vocab" id="vocab" onChange={handleVocabSelect} >
-                    {hskLevels.map(level => <option value={level}>HSK-{level}</option>)}
+                <select name="vocab" id="vocab" onChange={handleVocabSelect} defaultValue={5}>
+                    {hskLevels.map(level => <option key={"hsk-"+level} value={level}>HSK-{level}</option>)}
                 </select>
             </div>
 

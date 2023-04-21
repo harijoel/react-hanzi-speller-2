@@ -3731,7 +3731,7 @@
             },
             "translation-data": {
                 "english": "do manual labor; to work",
-                "pinyin-numbered": "gan4 huo2r",
+                "pinyin-numbered": "gan4huo2r5",
                 "pinyin": "gàn huór",
                 "simplified": "干活儿",
                 "traditional": "幹活兒"
@@ -3839,7 +3839,7 @@
             },
             "translation-data": {
                 "english": "individual; personal; oneself",
-                "pinyin-numbered": "ger4en2",
+                "pinyin-numbered": "ge4ren2",
                 "pinyin": "gèrén",
                 "simplified": "个人",
                 "traditional": "個人"
@@ -4151,7 +4151,7 @@
             },
             "translation-data": {
                 "english": "bone; moral character",
-                "pinyin-numbered": "gu3tou",
+                "pinyin-numbered": "gu3tou5",
                 "pinyin": "gǔtou",
                 "simplified": "骨头",
                 "traditional": "骨頭"
@@ -4235,8 +4235,8 @@
             },
             "translation-data": {
                 "english": "no wonder; so that's why",
-                "pinyin-numbered": "guai4 bu de",
-                "pinyin": "guài bu de",
+                "pinyin-numbered": "guai4bu5de5",
+                "pinyin": "guàibude",
                 "simplified": "怪不得",
                 "traditional": "怪不得"
             }
@@ -4811,7 +4811,7 @@
             },
             "translation-data": {
                 "english": "monkey",
-                "pinyin-numbered": "hou2zi",
+                "pinyin-numbered": "hou2zi5",
                 "pinyin": "hóuzi",
                 "simplified": "猴子",
                 "traditional": "猴子"
@@ -4931,7 +4931,7 @@
             },
             "translation-data": {
                 "english": "confused; bewildered; muddled",
-                "pinyin-numbered": "hu2tu",
+                "pinyin-numbered": "hu2tu5",
                 "pinyin": "hútu",
                 "simplified": "糊涂",
                 "traditional": "糊塗"
@@ -5423,7 +5423,7 @@
             },
             "translation-data": {
                 "english": "commemorate; remember",
-                "pinyin-numbered": "jin4ian4",
+                "pinyin-numbered": "ji4nian4",
                 "pinyin": "jìniàn",
                 "simplified": "纪念",
                 "traditional": "紀念"
@@ -5783,7 +5783,7 @@
             },
             "translation-data": {
                 "english": "Be particular about; fastidious; stress; exquisite ; careful study",
-                "pinyin-numbered": "jiang3jiu",
+                "pinyin-numbered": "jiang3jiu5",
                 "pinyin": "jiǎngjiu",
                 "simplified": "讲究",
                 "traditional": "講究"
@@ -5951,7 +5951,7 @@
             },
             "translation-data": {
                 "english": "sturdy; (also -shí: bear fruit)",
-                "pinyin-numbered": "jie1shi",
+                "pinyin-numbered": "jie1shi5",
                 "pinyin": "jiēshi",
                 "simplified": "结实",
                 "traditional": "結實"
@@ -6071,7 +6071,7 @@
             },
             "translation-data": {
                 "english": "(finger) ring",
-                "pinyin-numbered": "jie4zhi",
+                "pinyin-numbered": "jie4zhi5",
                 "pinyin": "jièzhi",
                 "simplified": "戒指",
                 "traditional": "戒指"
@@ -6167,7 +6167,7 @@
             },
             "translation-data": {
                 "english": "do one's best; to strive as much as possible",
-                "pinyin-numbered": "jin4 li4",
+                "pinyin-numbered": "jin4li4",
                 "pinyin": "jìn lì",
                 "simplified": "尽力",
                 "traditional": "盡力"
@@ -7787,7 +7787,7 @@
             },
             "translation-data": {
                 "english": "sensitive; susceptible",
-                "pinyin-numbered": "ming3an3",
+                "pinyin-numbered": "min3gan3",
                 "pinyin": "mǐngǎn",
                 "simplified": "敏感",
                 "traditional": "敏感"
@@ -8039,7 +8039,7 @@
             },
             "translation-data": {
                 "english": "no wonder",
-                "pinyin-numbered": "nang2uai4",
+                "pinyin-numbered": "nan2guai4",
                 "pinyin": "nánguài",
                 "simplified": "难怪",
                 "traditional": "難怪"
@@ -9263,7 +9263,7 @@
             },
             "translation-data": {
                 "english": "confirm; confirmation; verify",
-                "pinyin-numbered": "quer4en4",
+                "pinyin-numbered": "que4ren4",
                 "pinyin": "quèrèn",
                 "simplified": "确认",
                 "traditional": "確認"
@@ -9382,7 +9382,7 @@
                 "id": 781
             },
             "translation-data": {
-                "english": "(currency) renminbi (RMB)",
+                "english": "Chinese yuan",
                 "pinyin-numbered": "ren2min2bi4",
                 "pinyin": "rénmínbì",
                 "simplified": "人民币",
@@ -13895,7 +13895,7 @@
             },
             "translation-data": {
                 "english": "employee; staff; personnel",
-                "pinyin-numbered": "yuang2ong1",
+                "pinyin-numbered": "yuan2gong1",
                 "pinyin": "yuángōng",
                 "simplified": "员工",
                 "traditional": "員工"
@@ -15083,7 +15083,7 @@
             },
             "translation-data": {
                 "english": "pass on; to communicate; to transmit",
-                "pinyin-numbered": "zhuang3ao4",
+                "pinyin-numbered": "zhuan3gao4",
                 "pinyin": "zhuǎngào",
                 "simplified": "转告",
                 "traditional": "轉告"
