@@ -58,6 +58,7 @@ function App() {
   const isSpellingOverAndExtraKey = inputKeys.length > textToType.length
   const normalIndex = inputSylArray.length - 1
   const dynamicIndex = getDynamicIndex(inputSylArray, textToTypeSyl_Array)
+  const isPatternStop = inputKeys.length > textToType.length - mistakeCountTolerance - 1
   // ##  End of dependent variables  ## //
 
   // Add input key functionality
@@ -81,14 +82,17 @@ function App() {
 
   // Pattern detector
   useEffect(() => {
-    if (mistakeTrail.length >= mistakeCountTolerance && mistakeCountTolerance) { // bug here
-      if (mistakeTrail.length === mistakeCountTolerance && mode === "onlyTones") {
+    if (mistakeTrail.length >= mistakeCountTolerance) { // bug here
+      
+      const isAbsentPatternDisabled = mistakeTrail.length === mistakeCountTolerance && mode === "onlyTones"
+      if (isAbsentPatternDisabled || isPatternStop || !mistakeCountTolerance) {
         return
       }
       const index = inputKeys.length
       // Define trail patterns
       const mistakesFromAbsent = mistakeTrail.slice(0, mistakeCountTolerance)
       const mistakesFromMistype = mistakeTrail.slice(1, mistakeCountTolerance + 1)
+
       // Get correct text ahead
       const textAhead = textToType.slice(index+1, index+1 + mistakeCountTolerance)
       const remainingInputKeys: SpelledKey[] = textAhead.map(
@@ -120,7 +124,8 @@ function App() {
         setMistakeTrail([])
         }
     }
-  }, [mistakeTrail.length > mistakeCountTolerance, mistakeTrail.length === mistakeCountTolerance, mode])
+  }, [mistakeTrail.length > mistakeCountTolerance, mistakeTrail.length === mistakeCountTolerance, isPatternStop, mode])
+  //
 
   // Handle 'Keypress' & router
   useEffect(() => {
@@ -136,6 +141,10 @@ function App() {
       else {
       // Handle Incorrect keypress
         playMistakeFX()
+        // // add condition here to stop adding mistake trail ######################################
+        // if (inputKeys.length > textToType.length - mistakeCountTolerance -1 ) {
+        //   return
+        // }
         setMistakeTrail(oldMistakeTrail => [...oldMistakeTrail, key])
         console.log(mistakeTrail.length)
       }
@@ -146,7 +155,7 @@ function App() {
     return () => {
       document.removeEventListener("keypress", handler)
     }
-  }, [inputKeys, mistakeTrail, revealNos, mode])
+  }, [inputKeys, mistakeTrail, revealNos, mode, mistakeCountTolerance])
 
   // Handle extra keypress
   useEffect(() => {
@@ -206,6 +215,7 @@ function App() {
                 setSettings={setSettings}
                 settings={settings}
       />
+
       <h1>
         {!inputKeys.length && "##"}
         {inputKeys.map((c, i) => {
@@ -215,6 +225,8 @@ function App() {
               )})
         }
       </h1>
+      <h1>{mistakeTrail.map((mk, i) => <span key={"mk-"+i} style={{color: "red"}}>{mk}</span> )}</h1>
+
       <div className="chinesewordT"><div className="hanziT flip"><div className="characterT">五</div><div className="st back">lorem</div></div></div>
       <ChineseWord
         hanziPinyinArrayWord={hanziPinyinArrayWord} 
