@@ -7,24 +7,34 @@ type SpellerProps = {
     pinyinAcc: string
     pinyinRoman: string
     correctMap: boolean[]
+    showAns: boolean
     isReveal: boolean
     isFlip: boolean
     mode: string
 }
 
-export default function Speller({spelledKeys, textToType="", pinyinAcc, pinyinRoman, correctMap, isReveal, isFlip, mode}: SpellerProps) {
-    const isFinish = spelledKeys.length >= textToType?.length // When spelledKeys === textoToType (because it already contains mode)
-    //const charColors = spelledKeys.map((sKey, i) => sKey.inputKey === sKey.correctKey ? "blue" : "red" )
+export default function Speller({
+    spelledKeys, 
+    textToType="", 
+    pinyinAcc, 
+    pinyinRoman, 
+    correctMap, 
+    showAns,
+    isReveal, 
+    isFlip, 
+    mode}: SpellerProps) {
+
+    const isFinish = spelledKeys.length >= textToType?.length 
     const charColors = correctMap.map(isCorrect => isCorrect ? "blue" : "red" )
     const isThereNumber = mode === "withTones" || mode === "onlyTones"
     const isOnlyTones = mode === "onlyTones"
 
+    const showSpace = !spelledKeys.length && !showAns // review this for learning
 
     return (
         <div className={`speller ${isFlip ? "#back" : ""}`}>
-            
 
-            {!isFinish && isOnlyTones && <span>{pinyinRoman}</span> }
+            {(!isFinish && isOnlyTones) && <span>{pinyinRoman}</span> }
             
             {spelledKeys.map((sKey, i) => {
                 return (
@@ -42,10 +52,12 @@ export default function Speller({spelledKeys, textToType="", pinyinAcc, pinyinRo
                     </>
                 )
             })}
-            {isReveal && <span className="reveal-text">{textToType.slice(spelledKeys.length, textToType.length)}</span> }
-           
-           {!spelledKeys.length && !isReveal && <div className="temporal-space">#</div>}
+            {(showAns || isReveal) && <span className="reveal-text">
+                {textToType.slice(spelledKeys.length, textToType.length)}
+            </span>}
 
+            {showSpace && <div className="temporal-space reveal-text">??</div>}
+           
         </div>
     )
 }

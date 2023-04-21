@@ -3,12 +3,13 @@ body {
 }
 
 .settings {
-    color: black
+    color: black;
+    display: flex;
 }
 
 .form-group {
-    display: inline;
     padding: 5px;
+    margin: 5px 5px;
     border-right: 1px solid gray;
     font-weight: bold;
 }
@@ -21,12 +22,14 @@ body {
 .hanzi, .hanziT {
     text-align: center;
     margin: 5px;
-    border: 2px solid rgb(208, 226, 225);
+    width: 130px;
+    height: 175px;
+    border: 3px solid rgb(208, 226, 225);
     border-radius: 15px;
 
     transform: perspective(1000px) rotateY(var(--rotate-y, 0));
     transform-style: preserve-3d;
-    transition: 200ms
+    transition: 180ms
 }
 
 .hanzi.flip {
@@ -43,8 +46,8 @@ body {
 
 .character, .characterT {
     font-size: 90px;
-    width: 125px;
     backface-visibility: hidden;
+    padding-top: 8px;
 }
 
 .mistake {
@@ -54,6 +57,7 @@ body {
 .speller {
     position: relative;
     top: -1.8em;
+    margin-bottom: -1.8em;
     font-size: 30px;
     padding-bottom: 10px;
     text-align: center;
@@ -64,7 +68,7 @@ body {
 }
 
 .temporal-space {
-    visibility: hidden;
+    visibility: block;
 }
 
 .btn {

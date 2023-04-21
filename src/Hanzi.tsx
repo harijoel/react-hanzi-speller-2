@@ -9,6 +9,7 @@ type HanziProps = {
     traditional: boolean
     active: boolean
     mistakeTrail: string[]
+    showAns: boolean
     isReveal: boolean
     hideChars: boolean
     animations: boolean
@@ -21,42 +22,46 @@ export default function Hanzi({
     traditional, 
     active=false, 
     mistakeTrail,
+    showAns,
     isReveal, 
     hideChars, 
     animations,
     mode}: HanziProps) {
 
     const character = hanziPinyinChar.hanzi_SimpTrad[traditional ? 1 : 0]
-    const textToType = hanziPinyinChar.textToType_Syl
-    const correctMap = spelledKeys.map((sKey, i) => sKey.inputKey === sKey.correctKey)
-    const isThereAnyMistake= correctMap.some(correct => !correct)
     const pinyinRoman = hanziPinyinChar.pinyinNo
+    const textToType = hanziPinyinChar.textToType_Syl
+    
+    const correctMap = spelledKeys.map((sKey, i) => sKey.inputKey === sKey.correctKey)
+    const isAnyMistakes = correctMap.some(correct => !correct)
+
     const isFinish = spelledKeys.length >= textToType?.length
-    const isVisible = isFinish || !hideChars || isReveal // isReveal added recently
-    const isThereAnimationClass = animations && !isVisible ? "flip" : "" //animations ? (!isVisible ? "flip" : "") : ""
+    const isCharVisible = isFinish || !hideChars || isReveal
+    const animationClass = animations && !isCharVisible ? "flip" : ""
+
     const isWarning = mistakeTrail?.length && active
     const borderColor = isWarning ? "red" : "blue"
-    //style={{visibility: isVisible? "visible" : "hidden"}}
+    
     return (
-        <div>
-            <div className={"hanzi " + isThereAnimationClass} style={{borderColor: active ? borderColor : ""}}>
-                <div>{active ? "(*)" : "( )" }</div>
+        <div className="hanzi-speller-container">
+            <div className={"hanzi " + animationClass} style={{borderColor: active ? borderColor : ""}}>
+                
                 <div style={{
-                        color: isThereAnyMistake ? "red" : "black", 
-                        visibility: isVisible? "visible" : "hidden"}} 
+                        color: isAnyMistakes ? "red" : "black", 
+                        visibility: isCharVisible? "visible" : "hidden"}} 
                      className={"character"} 
                 >
                     {character}
                 </div>
-                <div className='speller temporal-space'>#</div>
             </div>
             <Speller spelledKeys={spelledKeys} 
                         textToType={textToType} 
                         pinyinAcc={hanziPinyinChar.pinyinAcc} 
                         pinyinRoman={pinyinRoman}
                         correctMap={correctMap}
+                        showAns={showAns}
                         isReveal={isReveal}
-                        isFlip={!isVisible}
+                        isFlip={!isCharVisible}
                         mode={mode} 
             />
         </div>

@@ -46,7 +46,8 @@ export default function ChineseWord({
                     traditional={traditional}
                     active={dynamicIndex === i}
                     mistakeTrail={mistakeTrail}
-                    isReveal={revealNos.includes(i) || showAns}
+                    showAns={showAns}
+                    isReveal={revealNos.includes(i)}
                     hideChars={hideChars}
                     animations={animations}
                     mode={mode}
