@@ -225,7 +225,7 @@ function App() {
               )})
         }
       </h1>
-      <h1>{mistakeTrail.map((mk, i) => <span key={"mk-"+i} style={{color: "red"}}>{mk}</span> )}</h1>
+      <h1>${mistakeTrail.map((mk, i) => <span key={"mk-"+i} style={{color: "red"}}>{mk}</span> )}</h1>
 
       <div className="chinesewordT"><div className="hanziT flip"><div className="characterT">五</div><div className="st back">lorem</div></div></div>
       <ChineseWord
