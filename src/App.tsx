@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import hsk from './hsk-vocabulary/hsk-5.json'
+import hsk from './hsk-vocabulary/hsk-6.json'
 import ChineseWord from "./ChineseWord"
 import Settings from "./Settings"
 import { SpelledKey, Setting, HSKword } from "./types"
@@ -81,7 +81,10 @@ function App() {
 
   // Pattern detector
   useEffect(() => {
-    if (mistakeTrail.length >= mistakeCountTolerance && mistakeCountTolerance) {
+    if (mistakeTrail.length >= mistakeCountTolerance && mistakeCountTolerance) { // bug here
+      if (mistakeTrail.length === mistakeCountTolerance && mode === "onlyTones") {
+        return
+      }
       const index = inputKeys.length
       // Define trail patterns
       const mistakesFromAbsent = mistakeTrail.slice(0, mistakeCountTolerance)
@@ -97,7 +100,7 @@ function App() {
       let inputKey = mistakeTrail[0]
       let patternFound = false
         // case: Absent key
-      if (JSON.stringify(mistakesFromAbsent) === JSON.stringify(textAhead)) {
+      if (JSON.stringify(mistakesFromAbsent) === JSON.stringify(textAhead) && mode !== "onlyTones") {
         inputKey = "missing"
         patternFound = true
       }
@@ -117,7 +120,7 @@ function App() {
         setMistakeTrail([])
         }
     }
-  }, [mistakeTrail, mode])
+  }, [mistakeTrail.length > mistakeCountTolerance, mistakeTrail.length === mistakeCountTolerance, mode])
 
   // Handle 'Keypress' & router
   useEffect(() => {
@@ -147,10 +150,10 @@ function App() {
 
   // Handle extra keypress
   useEffect(() => {
-    if (isSpellingOver && mistakeTrail.length) {
+    if (isSpellingOver && mistakeTrail.length && mode !== "onlyTones") {
       setInputKeys(oldInputKeys => [...oldInputKeys, {inputKey: mistakeTrail[0], correctKey: "#"}])
     }
-  }, [isSpellingOver, mistakeTrail])
+  }, [isSpellingOver, mistakeTrail, mode])
 
   // Turn off reveal when jump to other character
   useEffect(() => {
@@ -187,7 +190,14 @@ function App() {
 
   return (
     <div>
-      <button onClick={() => playMistakeFX()}>Play Sound</button>
+      <button onClick={() => {
+        setInputKeys([])
+        setRevealNos([])
+        setMistakeTrail([]) } }
+      >
+          Reset
+      </button>
+
       <Settings setInputKeys={setInputKeys}
                 setHskWord={setHskWord}
                 getRandomHSK={getRandomHSK}

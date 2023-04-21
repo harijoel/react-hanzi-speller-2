@@ -68,7 +68,7 @@ body {
 }
 
 .temporal-space {
-    visibility: block;
+    visibility: hidden;
 }
 
 .btn {

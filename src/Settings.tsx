@@ -35,9 +35,9 @@ export default function Settings({
         setInputKeys([])
         setRevealNos([])
         setMistakeTrail([])
-        setSettings((oldSettings: Setting) => { return {
-            ...oldSettings,
-            mistakeCountTolerance: parseInt(toleranceEl.current!.value)}})
+        // setSettings((oldSettings: Setting) => { return {
+        //     ...oldSettings,
+        //     mistakeCountTolerance: parseInt(toleranceEl.current!.value)}})
     }
     // Hide-check dependent
     function handleHideCheck(e: ChangeEvent<HTMLInputElement>) {
@@ -66,6 +66,15 @@ export default function Settings({
             mode: e.target.value }})
     }
 
+    function handleToleranceSelect(e: ChangeEvent<HTMLSelectElement>) {
+        setInputKeys([])
+        setRevealNos([])
+        setMistakeTrail([])
+        setSettings((oldSettings: Setting) => { return {
+            ...oldSettings,
+            mistakeCountTolerance: parseInt(e.target.value) }})
+    }
+
     function handleVocabSelect(e: ChangeEvent<HTMLSelectElement>) {
         e.preventDefault()
         const hskLevel = e.target.value
@@ -91,7 +100,7 @@ export default function Settings({
 
             <div className="form-group">
                 <label htmlFor="tol">Tolerance </label>
-                <select name="tol" id="tol" ref={toleranceEl} defaultValue={2}>
+                <select name="tol" id="tol" defaultValue={settings.mistakeCountTolerance} onChange={handleToleranceSelect}>
                     {mitakeToleranceNos.map(num => 
                         <option key={"tol-"+num} value={num}>
                             {num}
