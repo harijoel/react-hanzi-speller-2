@@ -5,6 +5,7 @@ import mistakeSound from "./assets/mistake.wav"
 import winSound from "./assets/correctpass.wav"
 import oldKeyboardSound from "./assets/oldkeyboardpress.wav"
 import hardtyewriterhitSound from "./assets/hardtypewriterhit.wav"
+import magicSound from "./assets/magicfx.wav"
 
 export function getWordArray(
     wordHanzi: [string, string], 
@@ -135,9 +136,23 @@ export function getDynamicIndex(inputSylArray: SpelledKey[][], textToTypeSyl_Arr
     return normalIndex
 }
 
+export function countConsecutiveLastTrueValues(arr: boolean[]): number {
+    let count = 0;
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (arr[i]) {
+        count++;
+      } else {
+        break;
+      }
+    }
+    return count;
+}
+
 export function playSound(sound: string) {
     new Audio(sound).play()
 }
+
+export const playTest = () => playSound(magicSound)
 
 export function playKeypressFX() {
     new Audio(hardtyewriterhitSound).play()

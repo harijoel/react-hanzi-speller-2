@@ -3,9 +3,11 @@ import hsk from './hsk-vocabulary/hsk-6.json'
 import ChineseWord from "./ChineseWord"
 import Settings from "./Settings"
 import { SpelledKey, Setting, HSKword } from "./types"
-import { getDynamicIndex, getWordArray, playSound, playKeypressFX, playMistakeFX, playWinFX, sylibalizeInput } from "./util"
+import { getDynamicIndex, getWordArray, playSound, playKeypressFX, playMistakeFX, playWinFX, sylibalizeInput, playTest } from "./util"
 
 import './app.css'
+import Translation from "./Translation"
+import Buddy from "./Buddy"
 
 
 function getRandomHSK(): HSKword {
@@ -141,10 +143,6 @@ function App() {
       else {
       // Handle Incorrect keypress
         playMistakeFX()
-        // // add condition here to stop adding mistake trail ######################################
-        // if (inputKeys.length > textToType.length - mistakeCountTolerance -1 ) {
-        //   return
-        // }
         setMistakeTrail(oldMistakeTrail => [...oldMistakeTrail, key])
         console.log(mistakeTrail.length)
       }
@@ -160,7 +158,7 @@ function App() {
   // Handle extra keypress
   useEffect(() => {
     if (isSpellingOver && mistakeTrail.length && mode !== "onlyTones") {
-      setInputKeys(oldInputKeys => [...oldInputKeys, {inputKey: mistakeTrail[0], correctKey: "#"}])
+      setInputKeys(oldInputKeys => [...oldInputKeys, {inputKey: mistakeTrail[0], correctKey: "..."}])
     }
   }, [isSpellingOver, mistakeTrail, mode])
 
@@ -199,14 +197,6 @@ function App() {
 
   return (
     <div>
-      <button onClick={() => {
-        setInputKeys([])
-        setRevealNos([])
-        setMistakeTrail([]) } }
-      >
-          Reset
-      </button>
-
       <Settings setInputKeys={setInputKeys}
                 setHskWord={setHskWord}
                 getRandomHSK={getRandomHSK}
@@ -216,18 +206,36 @@ function App() {
                 settings={settings}
       />
 
-      <h1>
-        {!inputKeys.length && "##"}
+      <h3 className="input-visual">
+        <button onClick={() => {
+          playTest()
+          setInputKeys([])
+          setRevealNos([])
+          setMistakeTrail([]) } }
+        >
+            Reset
+        </button>
+        {hsk.metadata.identifier}:#{hskWord.metadata.id}
+        :$
         {inputKeys.map((c, i) => {
           const color = c.correctKey == c.inputKey ? "blue" : "red"
           return (
             <span key={"header-"+i} style={{color: color}}>{c.correctKey}</span>
               )})
         }
-      </h1>
-      <h1>${mistakeTrail.map((mk, i) => <span key={"mk-"+i} style={{color: "red"}}>{mk}</span> )}</h1>
+        |{mistakeTrail.map((mk, i) => <span key={"mk-"+i} style={{color: "orange"}}>{mk}</span> )}
+      </h3>
 
-      <div className="chinesewordT"><div className="hanziT flip"><div className="characterT">五</div><div className="st back">lorem</div></div></div>
+      {/* <div className="chinesewordT"><div className="hanziT flip"><div className="characterT">五</div><div className="st back">lorem</div></div></div> */}
+      <Buddy 
+        mistakeTrail={mistakeTrail} 
+        revealNos={revealNos} 
+        inputKeys={inputKeys} 
+        showAns={showAns} 
+        isSpellingOver={isSpellingOver}
+        isSpellingOverAndExtraKey={isSpellingOverAndExtraKey} 
+      />
+
       <ChineseWord
         hanziPinyinArrayWord={hanziPinyinArrayWord} 
         inputSylArray={inputSylArray}
@@ -242,7 +250,8 @@ function App() {
         animations={animations}
         mode={mode}
       />
-      {settings.showEnglish && <h2 style={{textAlign: "center"}}>{hskWord["translation-data"].english}</h2>}
+      
+      {settings.showEnglish && <Translation translationData={hskWord["translation-data"].english} />}
 
     </div>
     

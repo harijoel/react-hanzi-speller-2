@@ -29,12 +29,12 @@ export default function Speller({
     const isThereNumber = mode === "withTones" || mode === "onlyTones"
     const isOnlyTones = mode === "onlyTones"
 
-    const showSpace = !spelledKeys.length && !showAns // review this for learning
+    const showSpace = !spelledKeys.length && !showAns && !isReveal && !isOnlyTones // review this for learning
 
     return (
         <div className={`speller ${isFlip ? "#back" : ""}`}>
 
-            {(!isFinish && isOnlyTones) && <span>{pinyinRoman}</span> }
+            {(!isFinish && isOnlyTones) && <span>{pinyinRoman.replace(/v/g, 'ü')}</span> }
             
             {spelledKeys.map((sKey, i) => {
                 return (
