@@ -58,12 +58,11 @@ export default function Buddy({
         emoticon = "😭"
     }
 
-
-
     return (
         <div className="buddy-container">
             <div className="buddy-emotion"  >
-                <span className='emoji' onClick={() => console.log("BUDDY WAS CLICKED")}>{emoticon}</span>   
+                <span className='emoji' onClick={() => console.log("BUDDY WAS CLICKED")}>{emoticon}</span> 
+                <div className='buddy-message'>Click to activate!</div>  
             </div>
             {/* <div>{correctMap.map(c => c ? "o" : "x")}</div> */}
         </div>

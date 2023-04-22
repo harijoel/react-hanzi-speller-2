@@ -47,7 +47,7 @@ export default function Hanzi({
             <div className={"hanzi " + animationClass} style={{borderColor: active ? borderColor : ""}}>
                 
                 <div style={{
-                        color: isAnyMistakes ? "red" : "black", 
+                        color: isAnyMistakes ? "red" : (isFinish ? "black" : "rgb(90, 90, 90)"), 
                         visibility: isCharVisible? "visible" : "hidden"}} 
                      className={"character"} 
                 >

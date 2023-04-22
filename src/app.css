@@ -11,8 +11,19 @@ body {
     display: flex;
 }
 
-.translation-container {
+.translation {
+    margin-top: 0.2rem;
     text-align: center;
+}
+
+.translation-list {
+    font-size: 1.4rem;
+    display: inline-block;
+    text-align: left;
+}
+
+.translation-item {
+    padding-bottom: 0.2em;
 }
 
 .form-group {
@@ -43,6 +54,10 @@ body {
 
 .emoji {
     cursor: pointer;
+}
+
+.buddy-message {
+    font-size: 1.25rem;
 }
 
 .hanzi.flip {
@@ -82,6 +97,7 @@ body {
 
 .temporal-space {
     visibility: hidden;
+    color: rgb(90, 90, 90);
 }
 
 .btn {

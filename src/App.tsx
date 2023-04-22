@@ -21,6 +21,7 @@ function App() {
   const [inputKeys, setInputKeys] = useState<SpelledKey[]>([])
   const [mistakeTrail, setMistakeTrail] = useState<string[]>([])
   const [revealNos, setRevealNos] = useState<number[]>([])
+  const [elementclick, setElementclick] = useState(false)
   // Settings: default
   const [settings, setSettings] = useState<Setting>({
     mode: "noTones", 
@@ -70,7 +71,7 @@ function App() {
       setInputKeys(currentSpelledKeys => 
         [...currentSpelledKeys,  
         { inputKey: 
-          !revealNos.length // if not reveal mode
+          !revealNos.length || (showAns && hideChars) // if not reveal mode
             ? (mistakeTrail.length // if there is mistake
               ? mistakeTrail[0]    // dispaly that mistake
               : key)           // else diaplay correct
@@ -84,48 +85,48 @@ function App() {
 
   // Pattern detector
   useEffect(() => {
-    if (mistakeTrail.length >= mistakeCountTolerance) { // bug here
+    //if (mistakeTrail.length >= mistakeCountTolerance) { // bug here
       
-      const isAbsentPatternDisabled = mistakeTrail.length === mistakeCountTolerance && mode === "onlyTones"
-      if (isAbsentPatternDisabled || isPatternStop || !mistakeCountTolerance) {
-        return
-      }
-      const index = inputKeys.length
-      // Define trail patterns
-      const mistakesFromAbsent = mistakeTrail.slice(0, mistakeCountTolerance)
-      const mistakesFromMistype = mistakeTrail.slice(1, mistakeCountTolerance + 1)
-
-      // Get correct text ahead
-      const textAhead = textToType.slice(index+1, index+1 + mistakeCountTolerance)
-      const remainingInputKeys: SpelledKey[] = textAhead.map(
-        (correctKey, i) => {
-          return {inputKey: correctKey, correctKey: correctKey}
-        })
-      
-      // Compare text ahead with trail patterns
-      let inputKey = mistakeTrail[0]
-      let patternFound = false
-        // case: Absent key
-      if (JSON.stringify(mistakesFromAbsent) === JSON.stringify(textAhead) && mode !== "onlyTones") {
-        inputKey = "missing"
-        patternFound = true
-      }
-        // case: Mistyped key
-      if (JSON.stringify(mistakesFromMistype) === JSON.stringify(textAhead)) {
-        inputKey = mistakeTrail[0]
-        patternFound = true
-      }
-      // Display correct text ahead if pattern is found in mistake trail
-      if (patternFound) {
-        playKeypressFX()
-        const wrongInputKey: SpelledKey = {inputKey: inputKey, correctKey: textToType[index]}
-        setInputKeys(currentSpelledKeys => [...currentSpelledKeys,
-                                            wrongInputKey,
-                                            ...remainingInputKeys]
-                                            )
-        setMistakeTrail([])
-        }
+    const isAbsentPatternDisabled = mistakeTrail.length === mistakeCountTolerance && mode === "onlyTones"
+    if (isAbsentPatternDisabled || isPatternStop || !mistakeCountTolerance) {
+      return
     }
+    const index = inputKeys.length
+    // Define trail patterns
+    const mistakesFromAbsent = mistakeTrail.slice(0, mistakeCountTolerance)
+    const mistakesFromMistype = mistakeTrail.slice(1, mistakeCountTolerance + 1)
+
+    // Get correct text ahead
+    const textAhead = textToType.slice(index+1, index+1 + mistakeCountTolerance)
+    const remainingInputKeys: SpelledKey[] = textAhead.map(
+      (correctKey, i) => {
+        return {inputKey: correctKey, correctKey: correctKey}
+      })
+    
+    // Compare text ahead with trail patterns
+    let inputKey = mistakeTrail[0]
+    let patternFound = false
+      // case: Absent key
+    if (JSON.stringify(mistakesFromAbsent) === JSON.stringify(textAhead) && mode !== "onlyTones") {
+      inputKey = "missing"
+      patternFound = true
+    }
+      // case: Mistyped key
+    if (JSON.stringify(mistakesFromMistype) === JSON.stringify(textAhead)) {
+      inputKey = mistakeTrail[0]
+      patternFound = true
+    }
+    // Display correct text ahead if pattern is found in mistake trail
+    if (patternFound) {
+      playKeypressFX()
+      const wrongInputKey: SpelledKey = {inputKey: inputKey, correctKey: textToType[index]}
+      setInputKeys(currentSpelledKeys => [...currentSpelledKeys,
+                                          wrongInputKey,
+                                          ...remainingInputKeys]
+                                          )
+      setMistakeTrail([])
+      }
+    //}
   }, [mistakeTrail.length > mistakeCountTolerance, mistakeTrail.length === mistakeCountTolerance, isPatternStop, mode])
   //
 
@@ -182,7 +183,7 @@ function App() {
         setMistakeTrail([])
       } else {
       // Show answer if game is not over & at least one keypress of any kind
-        if (mistakeTrail.length > 0 || dynamicIndex === normalIndex && !showAns ) {
+        if (mistakeTrail.length > 0 || dynamicIndex === normalIndex && (!showAns || hideChars) ) {
           playMistakeFX()
           setRevealNos(oldRevealNos => [...oldRevealNos, dynamicIndex])
         } 
@@ -192,7 +193,7 @@ function App() {
     return () => {
       document.removeEventListener("keypress", handler)
     }
-  }, [dynamicIndex, mistakeTrail.length, isSpellingOver, isSpellingOverAndExtraKey, normalIndex])
+  }, [dynamicIndex, mistakeTrail.length, isSpellingOver, isSpellingOverAndExtraKey, normalIndex, hideChars, mode])
 
 
   return (

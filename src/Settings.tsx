@@ -24,22 +24,15 @@ export default function Settings({
     setSettings, 
     settings}: SettingsProps) {
 
-    //const modeEl = useRef<HTMLSelectElement>(null)
-    const toleranceEl = useRef<HTMLSelectElement>(null)
-    //const vocabEl = useRef<HTMLSelectElement>(null)
-
-    function handleSubmit(e: MouseEvent) {
+    function handleNewWord(e: MouseEvent) {
         e.preventDefault()
         console.log("$$$ prevented default $$$")
         setHskWord(getRandomHSK())
         setInputKeys([])
         setRevealNos([])
         setMistakeTrail([])
-        // setSettings((oldSettings: Setting) => { return {
-        //     ...oldSettings,
-        //     mistakeCountTolerance: parseInt(toleranceEl.current!.value)}})
     }
-    // Hide-check dependent
+    
     function handleHideCheck(e: ChangeEvent<HTMLInputElement>) {
         const isHideCharsChecked = e.target.checked
         setSettings((oldSettings: Setting) => { 
@@ -83,18 +76,18 @@ export default function Settings({
 
 
     return (
-        <div className="settings" >
-            <div className="form-group">
-                <label htmlFor="trad">Traditional </label>
-                <input id="trad" type="checkbox" name="traditional"
-                    checked={settings.traditional} 
-                    onChange={handleCheck} />
-            </div>
-
+        <div className="settings" onClick={() => console.log("SETTINGS WAS CLICKED")}>
             <div className="form-group">
                 <label htmlFor="show-ans">Show answer </label>
                 <input id="show-ans" type="checkbox" name="showAns" 
                     checked={settings.showAns} 
+                    onChange={handleCheck} />
+            </div>
+
+            <div className="form-group">
+                <label htmlFor="trad">Traditional </label>
+                <input id="trad" type="checkbox" name="traditional"
+                    checked={settings.traditional} 
                     onChange={handleCheck} />
             </div>
 
@@ -116,18 +109,18 @@ export default function Settings({
             </div>
 
             <div className="form-group">
-                <label htmlFor="english">Show English translation </label>
-                <input id="english" type="checkbox" name="showEnglish"
-                    checked={settings.showEnglish} 
-                    disabled={settings.hideChars} 
-                    onChange={handleCheck}/>
-            </div>
-
-            <div className="form-group">
                 <label htmlFor="flip">Flip animaton </label>
                 <input id="flip" type="checkbox" name="animations"
                     checked={settings.animations} 
                     disabled={!settings.hideChars} 
+                    onChange={handleCheck}/>
+            </div>
+
+            <div className="form-group">
+                <label htmlFor="english">Show English translation </label>
+                <input id="english" type="checkbox" name="showEnglish"
+                    checked={settings.showEnglish} 
+                    disabled={settings.hideChars} 
                     onChange={handleCheck}/>
             </div>
 
@@ -148,7 +141,7 @@ export default function Settings({
             </div>
 
             <div className="form-group">
-                <span  className="btn" onClick={(e: any) => handleSubmit(e)}>New word</span>
+                <span  className="btn" onClick={(e: any) => handleNewWord(e)}>New word</span>
             </div>
             
         </div>

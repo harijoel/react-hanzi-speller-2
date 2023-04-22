@@ -44,18 +44,6 @@ export function getWordArray(
         index_start = index_start + currenySylLen
     }
 
-    // // Error handling
-    // if (wordSylableNo !== wordPinyinNoArray.length || 
-    //     wordSylableNo !== wordPinyinAccArray.length || 
-    //     wordSylableNo !== wordPinyinRomanArray.length ) {
-    //     console.log("SYLABLES LENGTH DON'T MATCH")
-    //     console.log(wordSylableNo)
-    //     console.log(wordPinyinNo_clean.length, wordPinyinNo_clean)
-    //     console.log(wordPinyinAcc_clean.length, wordPinyinAcc_clean)
-    //     console.log(wordPinyinRomanArray.length, wordPinyinRomanArray)
-    //     return []
-    // }
-
     // Separate string by number. Ex: "zhong1wen2" => ["zhong1", "wen2"]
     // Had to define wordPinyinRomanArray as type any because match could throw...
     // ...null if nothing matches, so []
@@ -84,10 +72,6 @@ export function getWordArray(
     }
 
     return objectArray
-}
-
-export function getTextToType_SylArray(wordArray: HanziPinyin[], mode: string) {
-    
 }
 
 export function sylibalizeInput(hanziPinyinArrayWord: HanziPinyin[], inputKeys: SpelledKey[]) {
@@ -151,16 +135,9 @@ export function countConsecutiveLastTrueValues(arr: boolean[]): number {
 export function playSound(sound: string) {
     new Audio(sound).play()
 }
-
 export const playTest = () => playSound(magicSound)
-
-export function playKeypressFX() {
-    new Audio(hardtyewriterhitSound).play()
-}
-
-export function playMistakeFX() {
-    new Audio(mistakeSound).play()
-}
+export const playKeypressFX = () => playSound(hardtyewriterhitSound)
+export const playMistakeFX = () => playSound(mistakeSound)
 
 export function playWinFX() {
     const sound = new Audio(winSound)
