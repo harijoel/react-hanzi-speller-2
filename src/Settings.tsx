@@ -6,21 +6,13 @@ const modes = ["noTones", "withTones", "onlyTones"]
 const hskLevels = [1, 2, 3, 4, 5, 6]
 
 type SettingsProps = {
-    setInputKeys: (value: SpelledKey[]) => void //React.Dispatch<React.SetStateAction<SpelledKey[]>>
-    setHskWord: (value: HSKword) => void
-    getRandomHSK: (value: void) => HSKword
-    setRevealNos: (value: number[]) => void
-    setMistakeTrail: (value: string[]) => void
+    resetState: (newWord: boolean) => void
     setSettings: (value: SetStateAction<Setting>) => void
     settings: Setting
 }
 
 export default function Settings({
-    setInputKeys, 
-    setHskWord, 
-    getRandomHSK, 
-    setRevealNos, 
-    setMistakeTrail, 
+    resetState, 
     setSettings, 
     settings}: SettingsProps) {
 
@@ -29,10 +21,7 @@ export default function Settings({
     function handleNewWord(e: MouseEvent) {
         e.preventDefault()
         console.log("$$$ prevented default $$$")
-        setHskWord(getRandomHSK())
-        setInputKeys([])
-        setRevealNos([])
-        setMistakeTrail([])
+        resetState(true)
     }
     
     function handleHideCheck(e: ChangeEvent<HTMLInputElement>) {
@@ -53,18 +42,14 @@ export default function Settings({
     }
 
     function handleModeSelect(e: ChangeEvent<HTMLSelectElement>) {
-        setInputKeys([])
-        setRevealNos([])
-        setMistakeTrail([])
+        resetState(false)
         setSettings((oldSettings: Setting) => { return {
             ...oldSettings,
             mode: e.target.value }})
     }
 
     function handleToleranceSelect(e: ChangeEvent<HTMLSelectElement>) {
-        setInputKeys([])
-        setRevealNos([])
-        setMistakeTrail([])
+        resetState(false)
         setSettings((oldSettings: Setting) => { return {
             ...oldSettings,
             mistakeCountTolerance: parseInt(e.target.value) }})

@@ -2,6 +2,7 @@ import React from 'react'
 import { SpelledKey } from './types'
 
 type SpellerProps = {
+    hanziKey?: string
     spelledKeys: SpelledKey[]
     textToType: string
     pinyinAcc: string
@@ -13,6 +14,7 @@ type SpellerProps = {
 }
 
 export default function Speller({
+    hanziKey,
     spelledKeys, 
     textToType, 
     pinyinAcc, 
@@ -35,18 +37,18 @@ export default function Speller({
             
             {spelledKeys.map((sKey, i) => {
                 return (
-                    <>
-                        <span key={pinyinAcc+i} style={{color: charColors[i]}} >
+                    <span key={hanziKey+"-s-"+i} style={{color: charColors[i]}}>
+                        <>
                             {isFinish // If sylable is done typing
                                 ? (!isOnlyTones ? pinyinAcc[i] : pinyinAcc )  // then show pinyinAcc, else toType
                                 : sKey.correctKey}
-                        </span>
+                        </>
 
                         {   // Show last key (number) if wrong && last key && isNumber
                             !isNaN(parseInt(sKey.correctKey)) && !correctMap[i] &&
-                                <span key={pinyinAcc+"-last-"+i} style={{color: "red"}}>{sKey.correctKey}</span>
+                                <>{sKey.correctKey}</>
                         }
-                    </>
+                    </span>
                 )
             })}
             {(showAns || isReveal) && <span className="reveal-text">

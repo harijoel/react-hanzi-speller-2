@@ -3,7 +3,7 @@ import { HanziPinyin, SpelledKey } from './types'
 import Speller from './Speller'
 
 type HanziProps = {
-    onClick: any
+    hanziKey?: string
     hanziPinyinChar: HanziPinyin
     spelledKeys?: SpelledKey[]
     traditional: boolean
@@ -16,6 +16,7 @@ type HanziProps = {
 }
 
 export default function Hanzi({
+    hanziKey,
     hanziPinyinChar, 
     spelledKeys=[], 
     traditional, 
@@ -52,7 +53,8 @@ export default function Hanzi({
                     {character}
                 </div>
             </div>
-            <Speller spelledKeys={spelledKeys} 
+            <Speller    hanziKey={hanziKey} 
+                        spelledKeys={spelledKeys} 
                         textToType={textToType} 
                         pinyinAcc={hanziPinyinChar.pinyinAcc} 
                         pinyinRoman={pinyinRoman}

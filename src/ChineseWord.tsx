@@ -35,10 +35,12 @@ export default function ChineseWord({
 
     return (
         <div className="chineseword">
-            {hanziPinyinArrayWord.map((syl, i) => 
+            {hanziPinyinArrayWord.map((syl, i) => {
+                const hanziKey = "hz-"+i
+                return(
                 <Hanzi 
-                    key={"hanzi-"+syl+"-"+i}
-                    onClick={() => console.log("clicked: "+ i)}
+                    key={hanziKey}
+                    hanziKey={hanziKey}
                     hanziPinyinChar={syl}
                     spelledKeys={inputSylArray[i]}
                     traditional={traditional}
@@ -48,7 +50,7 @@ export default function ChineseWord({
                     isReveal={revealNos.includes(i)}
                     hideChars={hideChars}
                     animations={animations}
-                />
+                />)}
                 )
             }
         </div>

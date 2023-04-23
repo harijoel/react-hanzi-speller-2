@@ -9,8 +9,8 @@ export default function Translation({translationData}: TranslationProps) {
     return (
         <div className='translation'>
             <ul className="translation-list">
-            {translations.map(tran => 
-                <li className='translation-item'>
+            {translations.map((tran, i) => 
+                <li key={i+"-"+tran} className='translation-item'>
                     {tran.replace(/^\w/, c => c.toUpperCase())}
                 </li>
             )}

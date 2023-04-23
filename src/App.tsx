@@ -3,13 +3,11 @@ import hsk from './hsk-vocabulary/hsk-6.json'
 import ChineseWord from "./ChineseWord"
 import Settings from "./Settings"
 import { SpelledKey, Setting, HSKword } from "./types"
-import { getDynamicIndex, getWordArray, playSound, playKeypressFX, playMistakeFX, playWinFX, sylibalizeInput, playTest } from "./util"
+import { getDynamicIndex, getWordArray, playKeypressFX, playMistakeFX, playWinFX, sylibalizeInput, playTest } from "./util"
 
 import './app.css'
 import Translation from "./Translation"
 import Buddy from "./Buddy"
-import { resetArrTypeState } from "./customHooks"
-
 
 function getRandomHSK(): HSKword {
   const random_HSK_vocab_id = Math.floor(Math.random() * hsk.words.length)
@@ -22,7 +20,17 @@ function App() {
   const [inputKeys, setInputKeys] = useState<SpelledKey[]>([])
   const [mistakeTrail, setMistakeTrail] = useState<string[]>([])
   const [revealNos, setRevealNos] = useState<number[]>([])
-  const [elementclick, setElementclick] = useState(false)
+  //const [elementclick, setElementclick] = useState(false)
+
+  // Reset State
+  const resetState = useCallback((newWord?: boolean) => {
+    setInputKeys([])
+    setRevealNos([])
+    setMistakeTrail([])
+    if (newWord) {
+      setHskWord(getRandomHSK())
+    }
+  }, [])
 
   // Settings: default
   const [settings, setSettings] = useState<Setting>({
@@ -178,10 +186,7 @@ function App() {
       // Start new word if game is over
       if (isSpellingOver || isSpellingOverAndExtraKey) {
         playWinFX()
-        setHskWord(getRandomHSK())
-        setInputKeys([])
-        setRevealNos([])
-        setMistakeTrail([])
+        resetState(true)
       } 
       else { 
       // Show answer if game is not over & at least one keypress of any kind
@@ -200,11 +205,7 @@ function App() {
 
   return (
     <div>
-      <Settings setInputKeys={setInputKeys}
-                setHskWord={setHskWord}
-                getRandomHSK={getRandomHSK}
-                setRevealNos={setRevealNos}
-                setMistakeTrail={setMistakeTrail}
+      <Settings resetState={resetState}
                 setSettings={setSettings}
                 settings={settings}
       />
@@ -212,9 +213,7 @@ function App() {
       <h3 className="input-visual">
         <button onClick={() => {
           playTest()
-          setInputKeys([])
-          setRevealNos([])
-          setMistakeTrail([])
+          resetState()
            } }
         >
             Reset
