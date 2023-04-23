@@ -8,6 +8,7 @@ import { getDynamicIndex, getWordArray, playSound, playKeypressFX, playMistakeFX
 import './app.css'
 import Translation from "./Translation"
 import Buddy from "./Buddy"
+import { resetArrTypeState } from "./customHooks"
 
 
 function getRandomHSK(): HSKword {
@@ -22,6 +23,7 @@ function App() {
   const [mistakeTrail, setMistakeTrail] = useState<string[]>([])
   const [revealNos, setRevealNos] = useState<number[]>([])
   const [elementclick, setElementclick] = useState(false)
+
   // Settings: default
   const [settings, setSettings] = useState<Setting>({
     mode: "noTones", 
@@ -37,18 +39,22 @@ function App() {
   const showAns = settings.showAns
   const hideChars = settings.hideChars
   const animations = settings.animations
-  // hanziPinyinArrayWord, textToType // Once every new word
-  const [hanziPinyinArrayWord, textToType, textToTypeSyl_Array] = useMemo(() => {
-    const word = hskWord["translation-data"]
-    const hanziPinyinArrayWord = getWordArray(
-                                    [word.simplified, word.traditional],
-                                    word.pinyin,
-                                    word["pinyin-numbered"],
-                                    mode)
-    const textToTypeSyl_Array = hanziPinyinArrayWord.map(syl => syl.textToType_Syl)
-    const textToType = textToTypeSyl_Array.join("").split("")
-    return [hanziPinyinArrayWord, textToType, textToTypeSyl_Array]
-  }, [hskWord, mode])
+
+  // hanziPinyinArrayWord, textToType #:Once every new word
+  const [hanziPinyinArrayWord, 
+         textToType, 
+         textToTypeSyl_Array] = useMemo(() => 
+    {
+      const word = hskWord["translation-data"]
+      const hanziPinyinArrayWord = getWordArray(
+                                      [word.simplified, word.traditional],
+                                      word.pinyin,
+                                      word["pinyin-numbered"],
+                                      mode)
+      const textToTypeSyl_Array = hanziPinyinArrayWord.map(syl => syl.textToType_Syl)
+      const textToType = textToTypeSyl_Array.join("").split("")
+      return [hanziPinyinArrayWord, textToType, textToTypeSyl_Array]
+    }, [hskWord, mode])
 
   // Pinyinize input
   let inputSylArray = useMemo(() => {
@@ -57,7 +63,7 @@ function App() {
   console.log(inputSylArray)
 
   // Is Spelling over & Dynamic Index
-  const isSpellingOver = inputKeys.length === textToType.length //|| inputKeys.length === textToType.length + 1
+  const isSpellingOver = inputKeys.length === textToType.length
   const isSpellingOverAndExtraKey = inputKeys.length > textToType.length
   const normalIndex = inputSylArray.length - 1
   const dynamicIndex = getDynamicIndex(inputSylArray, textToTypeSyl_Array)
@@ -72,11 +78,11 @@ function App() {
         [...currentSpelledKeys,  
         { inputKey: 
           !revealNos.length || (showAns && hideChars) // if not reveal mode
-            ? (mistakeTrail.length // if there is mistake
-              ? mistakeTrail[0]    // dispaly that mistake
-              : key)           // else diaplay correct
-            : "missing",    // display missing mistake
-        correctKey: key //textToType[currentSpelledKeys.length]
+            ? (mistakeTrail.length                      // if there is mistake
+              ? mistakeTrail[0]                           // set that mistake
+              : key)                                      // else set correct
+            : "missing",                              // else set as missing-mistake
+        correctKey: key
         }])
       setMistakeTrail([])
     },
@@ -85,8 +91,6 @@ function App() {
 
   // Pattern detector
   useEffect(() => {
-    //if (mistakeTrail.length >= mistakeCountTolerance) { // bug here
-      
     const isAbsentPatternDisabled = mistakeTrail.length === mistakeCountTolerance && mode === "onlyTones"
     if (isAbsentPatternDisabled || isPatternStop || !mistakeCountTolerance) {
       return
@@ -122,36 +126,33 @@ function App() {
       const wrongInputKey: SpelledKey = {inputKey: inputKey, correctKey: textToType[index]}
       setInputKeys(currentSpelledKeys => [...currentSpelledKeys,
                                           wrongInputKey,
-                                          ...remainingInputKeys]
-                                          )
+                                          ...remainingInputKeys])
       setMistakeTrail([])
       }
-    //}
-  }, [mistakeTrail.length > mistakeCountTolerance, mistakeTrail.length === mistakeCountTolerance, isPatternStop, mode])
-  //
+    }, 
+  [mistakeTrail.length > mistakeCountTolerance, 
+   mistakeTrail.length === mistakeCountTolerance, 
+   isPatternStop, mode])
 
   // Handle 'Keypress' & router
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const key = e.key
-
       if (!key.match(/^[a-z0-9]$/)) return
-      // Handle Correct keypress
       e.preventDefault
+
+      // Handle Correct keypress
       if (key === textToType[inputKeys.length]) {
-        addInputKey(key, mistakeTrail)
-      } 
+        addInputKey(key, mistakeTrail) } 
       else {
       // Handle Incorrect keypress
         playMistakeFX()
         setMistakeTrail(oldMistakeTrail => [...oldMistakeTrail, key])
         console.log(mistakeTrail.length)
       }
-      
     }
     document.addEventListener("keypress", handler)
-
-    return () => {
+    return () => { 
       document.removeEventListener("keypress", handler)
     }
   }, [inputKeys, mistakeTrail, revealNos, mode, mistakeCountTolerance])
@@ -166,7 +167,7 @@ function App() {
   // Turn off reveal when jump to other character
   useEffect(() => {
     setRevealNos([])
-  }, [dynamicIndex, mode])
+  }, [dynamicIndex])
 
   // Handle 'Enter' keypress
   useEffect(() => {
@@ -177,23 +178,24 @@ function App() {
       // Start new word if game is over
       if (isSpellingOver || isSpellingOverAndExtraKey) {
         playWinFX()
-        setInputKeys([])
         setHskWord(getRandomHSK())
+        setInputKeys([])
         setRevealNos([])
         setMistakeTrail([])
-      } else {
+      } 
+      else { 
       // Show answer if game is not over & at least one keypress of any kind
-        if (mistakeTrail.length > 0 || dynamicIndex === normalIndex && (!showAns || hideChars) ) {
+        if ((mistakeTrail.length > 0 || dynamicIndex === normalIndex && !showAns) || (hideChars && showAns) ) {
           playMistakeFX()
           setRevealNos(oldRevealNos => [...oldRevealNos, dynamicIndex])
-        } 
+        }
       }
     }
     document.addEventListener("keypress", handler)
     return () => {
       document.removeEventListener("keypress", handler)
     }
-  }, [dynamicIndex, mistakeTrail.length, isSpellingOver, isSpellingOverAndExtraKey, normalIndex, hideChars, mode])
+  }, [dynamicIndex, mistakeTrail.length, isSpellingOver, isSpellingOverAndExtraKey, normalIndex, hideChars, showAns])
 
 
   return (
@@ -212,7 +214,8 @@ function App() {
           playTest()
           setInputKeys([])
           setRevealNos([])
-          setMistakeTrail([]) } }
+          setMistakeTrail([])
+           } }
         >
             Reset
         </button>
@@ -227,7 +230,10 @@ function App() {
         |{mistakeTrail.map((mk, i) => <span key={"mk-"+i} style={{color: "orange"}}>{mk}</span> )}
       </h3>
 
-      {/* <div className="chinesewordT"><div className="hanziT flip"><div className="characterT">五</div><div className="st back">lorem</div></div></div> */}
+      {/* <div className="chinesewordT"><div className="hanziT flip">
+      <div className="characterT">五</div><div className="st back">lorem</div>
+      </div></div> */}
+      
       <Buddy 
         mistakeTrail={mistakeTrail} 
         revealNos={revealNos} 
@@ -249,7 +255,6 @@ function App() {
         showAns={showAns}
         hideChars={hideChars}
         animations={animations}
-        mode={mode}
       />
       
       {settings.showEnglish && <Translation translationData={hskWord["translation-data"].english} />}

@@ -18,6 +18,7 @@ export type Setting = {
   hideChars: boolean
   showEnglish: boolean
   animations: boolean
+  hskLevel?: number 
   [key: string]: any
 }
 

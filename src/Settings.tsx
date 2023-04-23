@@ -24,6 +24,8 @@ export default function Settings({
     setSettings, 
     settings}: SettingsProps) {
 
+    const hskLevelEl = useRef<HTMLSelectElement>(null)
+
     function handleNewWord(e: MouseEvent) {
         e.preventDefault()
         console.log("$$$ prevented default $$$")
@@ -135,7 +137,7 @@ export default function Settings({
 
             <div className="form-group">
                 <label htmlFor="vocab">HSK Vocabulary: </label>
-                <select name="vocab" id="vocab" onChange={handleVocabSelect} defaultValue={5}>
+                <select name="vocab" id="vocab" defaultValue={5} ref={hskLevelEl}>
                     {hskLevels.map(level => <option key={"hsk-"+level} value={level}>HSK-{level}</option>)}
                 </select>
             </div>

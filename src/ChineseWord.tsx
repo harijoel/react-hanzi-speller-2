@@ -16,7 +16,6 @@ type ChineseWordProps = {
     showAns: boolean
     hideChars: boolean
     animations: boolean
-    mode: string
 }
 
 export default function ChineseWord({ 
@@ -31,8 +30,7 @@ export default function ChineseWord({
     mistakeTrail,
     showAns,
     hideChars,
-    animations,
-    mode }: ChineseWordProps) {
+    animations}: ChineseWordProps) {
 
 
     return (
@@ -50,7 +48,6 @@ export default function ChineseWord({
                     isReveal={revealNos.includes(i)}
                     hideChars={hideChars}
                     animations={animations}
-                    mode={mode}
                 />
                 )
             }

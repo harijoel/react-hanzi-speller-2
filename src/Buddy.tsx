@@ -20,7 +20,6 @@ export default function Buddy({
     isSpellingOverAndExtraKey}: BuddyProps) {
 
     let emoticon = (showAns && !inputKeys.length) ? "🧐" : "🙂" // default
-    let lastInput = inputKeys[(inputKeys?.length-1)]
     const mistakeStreakEmoticons = ["😐", "🙁", "😥", "😰", "😨"]
     const correctStreakEmoticons = ["😀", "😆"]
     const correctMap = inputKeys.map(k => k?.inputKey === k?.correctKey)

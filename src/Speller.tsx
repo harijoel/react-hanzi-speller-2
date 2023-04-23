@@ -3,31 +3,28 @@ import { SpelledKey } from './types'
 
 type SpellerProps = {
     spelledKeys: SpelledKey[]
-    textToType?: string
+    textToType: string
     pinyinAcc: string
     pinyinRoman: string
     correctMap: boolean[]
     showAns: boolean
     isReveal: boolean
     isFlip: boolean
-    mode: string
 }
 
 export default function Speller({
     spelledKeys, 
-    textToType="", 
+    textToType, 
     pinyinAcc, 
     pinyinRoman, 
     correctMap, 
     showAns,
     isReveal, 
-    isFlip, 
-    mode}: SpellerProps) {
+    isFlip}: SpellerProps) {
 
     const isFinish = spelledKeys.length >= textToType?.length 
     const charColors = correctMap.map(isCorrect => isCorrect ? "blue" : "red" )
-    const isThereNumber = mode === "withTones" || mode === "onlyTones"
-    const isOnlyTones = mode === "onlyTones"
+    const isOnlyTones = !isNaN(parseInt(textToType))
 
     const showSpace = !spelledKeys.length && !showAns && !isReveal && !isOnlyTones // review this for learning
 
@@ -46,7 +43,7 @@ export default function Speller({
                         </span>
 
                         {   // Show last key (number) if wrong && last key && isNumber
-                            (i === textToType.length -1) && (charColors[i] === "red") && isThereNumber &&
+                            !isNaN(parseInt(sKey.correctKey)) && !correctMap[i] &&
                                 <span key={pinyinAcc+"-last-"+i} style={{color: "red"}}>{sKey.correctKey}</span>
                         }
                     </>

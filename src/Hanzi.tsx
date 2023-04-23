@@ -13,7 +13,6 @@ type HanziProps = {
     isReveal: boolean
     hideChars: boolean
     animations: boolean
-    mode: string
 }
 
 export default function Hanzi({
@@ -25,8 +24,7 @@ export default function Hanzi({
     showAns,
     isReveal, 
     hideChars, 
-    animations,
-    mode}: HanziProps) {
+    animations}: HanziProps) {
 
     const character = hanziPinyinChar.hanzi_SimpTrad[traditional ? 1 : 0]
     const pinyinRoman = hanziPinyinChar.pinyinNo
@@ -62,7 +60,6 @@ export default function Hanzi({
                         showAns={showAns}
                         isReveal={isReveal}
                         isFlip={!isCharVisible}
-                        mode={mode} 
             />
         </div>
         
