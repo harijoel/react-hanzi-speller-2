@@ -10,7 +10,7 @@ Keybr.com inspired typing algorithm adapted into Chinese characters. Spell Chine
 
 ## How to play
 1.  Before any typing, it's recomended to click on the emoji to focus all keyboard input into the speller and prevent prevent unintended actions.
-2.  To start, type in the pinyin pronunciation of the Chinese-character selected in blue. The blue selector will move automatically after the spelling of the selected character is complete.
+2.  Type in the pinyin pronunciation of the Chinese-character selected in blue. The blue selector will move automatically after the spelling of the selected character is complete.
 3.  When the spelling of each of the displayed characters has been fully completed, press <kbd>Enter</kbd> to get a new word.
 
 ## Don’t know the spelling of a character?
