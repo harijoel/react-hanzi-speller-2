@@ -3,7 +3,7 @@ import hsk from './hsk-vocabulary/hsk-6.json'
 import ChineseWord from "./ChineseWord"
 import Settings from "./Settings"
 import { SpelledKey, Setting, HSKword } from "./types"
-import { getDynamicIndex, getWordArray, playKeypressFX, playMistakeFX, playWinFX, sylibalizeInput, playTest } from "./util"
+import { getDynamicIndex, getWordArray, playKeypressFX, playMistakeFX, playWinFX, sylibalizeInput } from "./util"
 
 import './app.css'
 import Translation from "./Translation"
@@ -214,26 +214,13 @@ function App() {
                 settings={settings}
       />
 
-      <StatusBar />
-
-      <h3 className="input-visual">
-        <button onClick={() => {
-          playTest()
-          resetState()
-           } }
-        >
-            Reset
-        </button>
-        {hsk.metadata.identifier}:#{hskWord.metadata.id}
-        :$
-        {inputKeys.map((c, i) => {
-          const color = c.correctKey == c.inputKey ? "blue" : "red"
-          return (
-            <span key={"header-"+i} style={{color: color}}>{c.correctKey}</span>
-              )})
-        }
-        |{mistakeTrail.map((mk, i) => <span key={"mk-"+i} style={{color: "orange"}}>{mk}</span> )}
-      </h3>
+      <StatusBar  
+        vocabularySetId={hsk.metadata.identifier} 
+        wordId={hskWord.metadata.id}
+        inputKeys={inputKeys}
+        mistakeTrail={mistakeTrail}
+        resetState={resetState}
+      />
       
       <Buddy 
         mistakeTrail={mistakeTrail} 
