@@ -20,7 +20,7 @@ export default function Hanzi({
     hanziPinyinChar, 
     spelledKeys=[], 
     traditional, 
-    active=false, 
+    active, 
     mistakeTrail,
     showAns,
     isReveal, 

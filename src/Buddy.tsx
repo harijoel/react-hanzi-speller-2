@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { SpelledKey } from './types'
 import { countConsecutiveLastTrueValues } from './util'
 
@@ -28,17 +28,18 @@ export default function Buddy({
     const mistakeStreak = mistakeTrail.length
     const isPerfectSpelling = isSpellingOver && !correctMap.includes(false)
     const isDisasterSpelling = isSpellingOver && !correctMap.includes(true)
-    
+
+    const sleepTime = 4000 //milliseconds 
+
+    const [emo, setEmo] = useState<string>(emoticon)
+    const [clickToggle, setClickToggle] = useState<boolean>(true)
+
     if (correctStreak) {
         emoticon = correctStreakEmoticons[correctStreak - 1] ?? "😎"
     }
 
     if (mistakeStreak) {
         emoticon = mistakeStreakEmoticons[mistakeStreak - 1] ?? "🙃"
-    }
-
-    if (mistakeStreak === 42) {
-        emoticon = "👽" // Ayy LMAO
     }
 
     if (isPerfectSpelling) {
@@ -57,10 +58,53 @@ export default function Buddy({
         emoticon = "😭"
     }
 
+    if (mistakeStreak === 42) {
+        emoticon = "👽" // Ayy LMAO
+    }
+
+    useEffect(() => {
+        setEmo("😝")
+        const timer0 = setTimeout(() => {
+            setEmo(emoticon)
+          }, 500)
+        return () => clearTimeout(timer0) 
+    }, [clickToggle])
+
+    useEffect(() => {
+        setEmo(emoticon)
+    }, [emoticon])
+    
+    useEffect(() => {
+
+        //setEmo(emoticon)
+        
+        if (!mistakeTrail.length && !inputKeys.length || isSpellingOver || isSpellingOverAndExtraKey) {
+            return
+        }
+
+        const timer2 = setTimeout(() => {
+            setEmo("🥱")
+          }, sleepTime);
+        const timer3 = setTimeout(() => {
+            setEmo("😴")
+          }, sleepTime + 500);
+        return () => {
+            clearTimeout(timer2) 
+            clearTimeout(timer3)
+        }
+
+    }, [mistakeTrail, 
+        revealNos, 
+        inputKeys, 
+        showAns, 
+        isSpellingOver, 
+        isSpellingOverAndExtraKey, clickToggle])
+
+
     return (
         <div className="buddy-container">
             <div className="buddy-emotion"  >
-                <span className='emoji' onClick={() => console.log("BUDDY WAS CLICKED")}>{emoticon}</span> 
+                <span className='emoji' onClick={() => setClickToggle(bool => !bool)}>{emo}</span> 
                 <div className='buddy-message'>Click to activate!</div>  
             </div>
         </div>

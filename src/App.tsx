@@ -8,6 +8,7 @@ import { getDynamicIndex, getWordArray, playKeypressFX, playMistakeFX, playWinFX
 import './app.css'
 import Translation from "./Translation"
 import Buddy from "./Buddy"
+import StatusBar from "./StatusBar"
 
 function getRandomHSK(): HSKword {
   const random_HSK_vocab_id = Math.floor(Math.random() * hsk.words.length)
@@ -23,7 +24,7 @@ function App() {
   //const [elementclick, setElementclick] = useState(false)
 
   // Reset State
-  const resetState = useCallback((newWord?: boolean) => {
+  const resetState = useCallback((newWord: boolean = false) => {
     setInputKeys([])
     setRevealNos([])
     setMistakeTrail([])
@@ -189,8 +190,11 @@ function App() {
         resetState(true)
       } 
       else { 
-      // Show answer if game is not over & at least one keypress of any kind
-        if ((mistakeTrail.length > 0 || dynamicIndex === normalIndex && !showAns) || (hideChars && showAns) ) {
+      // ((mistakeTrail.length > 0 || dynamicIndex === normalIndex && !showAns) || (hideChars && showAns)) && !(showAns && !hideChars )
+      const isAnyKeypress = mistakeTrail.length > 0 || dynamicIndex === normalIndex
+      const justFlip = (hideChars && showAns)
+      // 
+        if (isAnyKeypress && !showAns || justFlip) {
           playMistakeFX()
           setRevealNos(oldRevealNos => [...oldRevealNos, dynamicIndex])
         }
@@ -210,6 +214,8 @@ function App() {
                 settings={settings}
       />
 
+      <StatusBar />
+
       <h3 className="input-visual">
         <button onClick={() => {
           playTest()
@@ -228,10 +234,6 @@ function App() {
         }
         |{mistakeTrail.map((mk, i) => <span key={"mk-"+i} style={{color: "orange"}}>{mk}</span> )}
       </h3>
-
-      {/* <div className="chinesewordT"><div className="hanziT flip">
-      <div className="characterT">五</div><div className="st back">lorem</div>
-      </div></div> */}
       
       <Buddy 
         mistakeTrail={mistakeTrail} 

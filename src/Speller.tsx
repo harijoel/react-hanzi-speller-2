@@ -14,7 +14,7 @@ type SpellerProps = {
 }
 
 export default function Speller({
-    hanziKey,
+    hanziKey="",
     spelledKeys, 
     textToType, 
     pinyinAcc, 
@@ -33,27 +33,28 @@ export default function Speller({
     return (
         <div className={`speller ${isFlip ? "#back" : ""}`}>
 
-            {(!isFinish && isOnlyTones) && <span>{pinyinRoman.replace(/v/g, 'ü')}</span> }
+            {(!isFinish && isOnlyTones) && <span>{ pinyinRoman.replace(/v/g, 'ü') }</span> }
             
             {spelledKeys.map((sKey, i) => {
                 return (
-                    <span key={hanziKey+"-s-"+i} style={{color: charColors[i]}}>
+                    <span key={hanziKey+"-s-"+i} style={{color: charColors[i]}} >
                         <>
                             {isFinish // If sylable is done typing
-                                ? (!isOnlyTones ? pinyinAcc[i] : pinyinAcc )  // then show pinyinAcc, else toType
+                                ? (!isOnlyTones 
+                                    ? pinyinAcc[i] 
+                                    : pinyinAcc ) 
                                 : sKey.correctKey}
                         </>
-
-                        {   // Show last key (number) if wrong && last key && isNumber
-                            !isNaN(parseInt(sKey.correctKey)) && !correctMap[i] &&
-                                <>{sKey.correctKey}</>
-                        }
+                        {!isNaN(parseInt(sKey.correctKey)) && !correctMap[i] && // Show last key (number) if wrong
+                            <>{sKey.correctKey}</>}
                     </span>
                 )
             })}
-            {(showAns || isReveal) && <span className="reveal-text">
-                {textToType.slice(spelledKeys.length, textToType.length)}
-            </span>}
+
+            {(showAns || isReveal) && 
+                <span className="reveal-text">
+                    { textToType.slice(spelledKeys.length, textToType.length) }
+                </span> }
 
             {showSpace && <div className="temporal-space reveal-text">??</div>}
            
