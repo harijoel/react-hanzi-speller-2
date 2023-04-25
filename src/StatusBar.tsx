@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { SpelledKey } from './types'
+import StatDelta from './StatDelta'
 
 type StatusBarProps = {
     vocabularySetId: string
@@ -80,7 +81,7 @@ export default function StatusBar({
     return (
         <div className="status-bar">
             <div>
-                Speed: {timeVars.keySpeed.toFixed(2)} key/s ({timeVars.keySpeedDif.toFixed(2)})
+                Speed: {timeVars.keySpeed.toFixed(2)} key/s (<StatDelta statDelta={timeVars.keySpeedDif} />)
             </div>
 
             <div>
@@ -88,15 +89,15 @@ export default function StatusBar({
             </div>
 
             <div>
-                Hanzi avg: {timeVars.avgHanziTime.toFixed(1)} s ({timeVars.avgHanziTimeDif.toFixed(1)})
+                Hanzi avg: {timeVars.avgHanziTime.toFixed(1)} s (<StatDelta statDelta={timeVars.avgHanziTimeDif} />)
             </div>
 
             <div>
-                Key accuracy: {timeVars.keyAccuracy.toFixed(2)}% ({timeVars.keyAccuracyDif.toFixed(1)})
+                Key accuracy: {timeVars.keyAccuracy.toFixed(2)}% (<StatDelta statDelta={timeVars.keyAccuracyDif} />)
             </div>
 
             <div>
-                Hanzi accuracy: {timeVars.hanziAccuracy.toFixed(2)}% ({timeVars.hanziAccuracyDif.toFixed(1)})
+                Hanzi accuracy: {timeVars.hanziAccuracy.toFixed(2)}% (<StatDelta statDelta={timeVars.hanziAccuracyDif} />)
             </div>
 
             <h3 className="input-visual">
