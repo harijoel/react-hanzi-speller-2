@@ -28,7 +28,7 @@ Or in the case of an absent key, if the letter 'g' is not input but its two foll
 - **Show answer** displays the text to be spelled on all characters at once. It is ideal for those who want to try the app but don’t know Chinese or those who want to cheat!
 - **Traditional** displays the presented word in traditional Chinese characters when it is checked, and simplified Chinese characters when it is unchecked.
 - **Tolerance** is the consecutive number of correct input keys after the wrong-spelling or absence of one key required to resume the spelling at that point.
-- **Hide Characters**, as the name indicates, hides the characters for an extra challenge, and provides the translation of the word. Characters reveal themselves when their spelling is complete.
+- **Hide Characters**, as the name indicates, hides the characters for an extra challenge, and provides the translation of the word. Characters reveal themselves when their spelling is complete or when their answer is revealed through an <kbd>Enter</kbd> press.
 - **Flip animation** allows the flip animation effect to be turned on or off when playing with ‘Hide Characters’ on. This effect triggers when a character is revealed.
 - **Mode** changes the type of spelling required for characters. There are 3 modes:
   - **noTones** requires the user to type the pinyin pronunciation using only letters from the English alphabet. The pinyin vowel of ‘ü’ is input as ‘v’. For example, the spelling for 女人 "nǚrén" should be input as "nvren".
@@ -41,3 +41,7 @@ Or in the case of an absent key, if the letter 'g' is not input but its two foll
   - **onlyTones** only requires the tones of each character to be input using the numbered notation described above. For example, 女人 "nǚrén" should be input as "32".
 - **HSK Vocabulary** changes the vocabulary pool from a selection of different HSK levels. Currently, the only way to change the HSK Vocabulary is by manually changing the import JSON file on the App.tsx component source code.
 - **New Word** displays a random word from the selected HSK Vocabulary level.
+
+## More
+- Double click the emoji to reset the spelling progress of the current word
+- When Show Answer and Hide Characters are both checked on settings, you can press <kbd>Enter</kbd> at any time to reveal the selected hidden character.
