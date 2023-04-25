@@ -223,7 +223,6 @@ function App() {
         mistakeTrail={mistakeTrail}
         inputSylArray={inputSylArray}
         isSpellingOver={isSpellingOver}
-        resetState={resetState}
       />
       
       <Buddy 
@@ -234,6 +233,7 @@ function App() {
         showAns={showAns} 
         isSpellingOver={isSpellingOver}
         isSpellingOverAndExtraKey={isSpellingOverAndExtraKey} 
+        resetState={resetState}
       />
 
       <ChineseWord

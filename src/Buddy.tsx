@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { SpelledKey } from './types'
-import { countConsecutiveLastTrueValues } from './util'
+import { countConsecutiveLastTrueValues, playTest } from './util'
 
 type BuddyProps = {
     mistakeTrail: string[]
@@ -10,6 +10,7 @@ type BuddyProps = {
     showAns: boolean
     isSpellingOver: boolean
     isSpellingOverAndExtraKey: boolean
+    resetState: (newWord?: boolean) => void
 }
 
 export default function Buddy({
@@ -19,7 +20,8 @@ export default function Buddy({
     correctMap,
     showAns, 
     isSpellingOver, 
-    isSpellingOverAndExtraKey}: BuddyProps) {
+    isSpellingOverAndExtraKey,
+    resetState}: BuddyProps) {
 
     
     let emoticon = (showAns && !correctMap?.length) ? "🧐" : "🙂" // default
@@ -115,7 +117,16 @@ export default function Buddy({
     return (
         <div className="buddy-container">
             <div className="buddy-emotion"  >
-                <span className='emoji' onClick={() => setClickToggle(bool => !bool)}>{emo}</span> 
+                <span className='emoji' onClick={() => {
+                    setClickToggle(bool => !bool)
+                    if (emo === "😝") {
+                        playTest()
+                        resetState()
+                    }
+                    }
+                }>
+                    {emo}
+                </span> 
                 <div className='buddy-message'>Click to activate!</div>  
             </div>
         </div>

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { SpelledKey } from './types'
-import { playTest } from './util'
 
 type StatusBarProps = {
     vocabularySetId: string
@@ -10,7 +9,6 @@ type StatusBarProps = {
     mistakeTrail: string[]
     inputSylArray: SpelledKey[][]
     isSpellingOver: boolean
-    resetState: (newWord?: boolean) => void
 }
 
 export default function StatusBar({
@@ -20,27 +18,34 @@ export default function StatusBar({
     correctMap, 
     mistakeTrail, 
     inputSylArray, 
-    isSpellingOver,
-    resetState}: StatusBarProps) {
+    isSpellingOver}: StatusBarProps) {
 
     const isSpellingStart = !!mistakeTrail.length || !!correctMap.length
 
     const spelledKeysCount = correctMap.length
     const correctKeysCount = correctMap.filter(correctKey => correctKey).length
-    const keyAccuracy = ((correctKeysCount / spelledKeysCount) * 100).toFixed(2)
+    const keyAccuracy = ((correctKeysCount / spelledKeysCount) * 100)
 
     const spelledHanziCount = inputSylArray.length
     const correctSpelledHanziCount = inputSylArray.filter(sylArr => { 
         const sylArrMapped = sylArr.map(sk => sk.inputKey === sk.correctKey)
         return !sylArrMapped.includes(false)
     }).length
-
-    const hanziAccuracy = ((correctSpelledHanziCount / spelledHanziCount) * 100).toFixed(2)
+    const hanziAccuracy = ((correctSpelledHanziCount / spelledHanziCount) * 100)
 
     const t1 = useRef(0)
     const t2 = useRef(0)
-    const [timedifVars, setTimedifVars] = useState({timeDif: 0, keySpeed: 0, avgHanziTime: 0})
-    let keySpeed = "0"
+    const [timeVars, setTimeVars] = useState({
+        timeDif: 0, 
+        keySpeed: 0, 
+        keySpeedDif: 0, 
+        avgHanziTime: 0,
+        avgHanziTimeDif: 0,
+        keyAccuracy: 0,
+        keyAccuracyDif: 0,
+        hanziAccuracy: 0,
+        hanziAccuracyDif: 0
+    })
 
     useEffect(() => {
         if (isSpellingStart && !isSpellingOver) {
@@ -49,27 +54,52 @@ export default function StatusBar({
     
         if (isSpellingOver) {
             t2.current = performance.now()
-            const timeDif = t2.current - t1.current
-            setTimedifVars(curretState => { 
-                return {...curretState, 
+            setTimeVars(oldState => { 
+                const timeDif = (t2.current - t1.current) / 1000
+                const keySpeed = spelledKeysCount / timeDif
+                const avgHanziTime = timeDif / spelledHanziCount
+                const keyAccuracy = (correctKeysCount / spelledKeysCount) * 100
+                //const hanziAccuracy = hanziAccuracy
+                return {...oldState, 
                     timeDif: timeDif, 
-                    keySpeed: spelledKeysCount * 1000 / timeDif,
-                    avgHanziTime: timeDif / spelledHanziCount }})
+                    keySpeed: keySpeed,
+                    keySpeedDif: keySpeed - oldState.keySpeed,
+                    avgHanziTime: timeDif / spelledHanziCount,
+                    avgHanziTimeDif: avgHanziTime - oldState.avgHanziTime,
+                    keyAccuracy: keyAccuracy,
+                    keyAccuracyDif: keyAccuracy - oldState.keyAccuracy,
+                    hanziAccuracy: hanziAccuracy,
+                    hanziAccuracyDif: hanziAccuracy - oldState.hanziAccuracy 
+                }
+            })
         }
     }, [isSpellingOver, isSpellingStart])
 
 
 
     return (
-        <div>
-            <h3 className="input-visual">
+        <div className="status-bar">
+            <div>
+                Speed: {timeVars.keySpeed.toFixed(2)} key/s ({timeVars.keySpeedDif.toFixed(2)})
+            </div>
 
-                <button onClick={() => {
-                    playTest()
-                    resetState()
-                }}>
-                    Reset
-                </button>
+            <div>
+                Time: {timeVars.timeDif.toFixed(2)} s
+            </div>
+
+            <div>
+                Hanzi avg: {timeVars.avgHanziTime.toFixed(1)} s ({timeVars.avgHanziTimeDif.toFixed(1)})
+            </div>
+
+            <div>
+                Key accuracy: {timeVars.keyAccuracy.toFixed(2)}% ({timeVars.keyAccuracyDif.toFixed(1)})
+            </div>
+
+            <div>
+                Hanzi accuracy: {timeVars.hanziAccuracy.toFixed(2)}% ({timeVars.hanziAccuracyDif.toFixed(1)})
+            </div>
+
+            <h3 className="input-visual">
 
                 {vocabularySetId}:#{wordId}
                 :$
@@ -83,11 +113,6 @@ export default function StatusBar({
                 })}
 
                 |{mistakeTrail.map((mk, i) => <span key={"mk-"+i} style={{color: "orange"}}>{mk}</span> )}
-
-                {`hanziAccuracy ${hanziAccuracy}, 
-                ${(timedifVars.timeDif / 1000).toFixed(2)} s |
-                ${timedifVars.keySpeed.toFixed(2)} key/s |
-                ${timedifVars.avgHanziTime.toFixed(1)} ms/hanzi`}
 
             </h3>
         </div>
