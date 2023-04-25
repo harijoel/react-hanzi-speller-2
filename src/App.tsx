@@ -77,6 +77,7 @@ function App() {
   const normalIndex = inputSylArray.length - 1
   const dynamicIndex = getDynamicIndex(inputSylArray, textToTypeSyl_Array)
   const isPatternStop = inputKeys.length > textToType.length - mistakeCountTolerance - 1
+  const correctMap = inputKeys.map(sk => sk.inputKey === sk.correctKey)
   // ##  End of dependent variables  ## //
 
   // Add input key functionality
@@ -218,7 +219,10 @@ function App() {
         vocabularySetId={hsk.metadata.identifier} 
         wordId={hskWord.metadata.id}
         inputKeys={inputKeys}
+        correctMap={correctMap}
         mistakeTrail={mistakeTrail}
+        inputSylArray={inputSylArray}
+        isSpellingOver={isSpellingOver}
         resetState={resetState}
       />
       
@@ -226,6 +230,7 @@ function App() {
         mistakeTrail={mistakeTrail} 
         revealNos={revealNos} 
         inputKeys={inputKeys} 
+        correctMap={correctMap}
         showAns={showAns} 
         isSpellingOver={isSpellingOver}
         isSpellingOverAndExtraKey={isSpellingOverAndExtraKey} 

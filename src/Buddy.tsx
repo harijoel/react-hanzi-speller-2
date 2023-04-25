@@ -5,7 +5,8 @@ import { countConsecutiveLastTrueValues } from './util'
 type BuddyProps = {
     mistakeTrail: string[]
     revealNos: number[]
-    inputKeys: SpelledKey[]
+    inputKeys?: SpelledKey[]
+    correctMap: boolean[]
     showAns: boolean
     isSpellingOver: boolean
     isSpellingOverAndExtraKey: boolean
@@ -15,14 +16,16 @@ export default function Buddy({
     mistakeTrail, 
     revealNos, 
     inputKeys, 
+    correctMap,
     showAns, 
     isSpellingOver, 
     isSpellingOverAndExtraKey}: BuddyProps) {
 
-    let emoticon = (showAns && !inputKeys.length) ? "🧐" : "🙂" // default
+    
+    let emoticon = (showAns && !correctMap?.length) ? "🧐" : "🙂" // default
     const mistakeStreakEmoticons = ["😐", "🙁", "😥", "😰", "😨"]
     const correctStreakEmoticons = ["😀", "😆"]
-    const correctMap = inputKeys.map(k => k?.inputKey === k?.correctKey)
+    //const correctMap = correctMap
     const correctStreak = countConsecutiveLastTrueValues(correctMap)
     const incorrectStreak = countConsecutiveLastTrueValues(correctMap.map(c => !c))
     const mistakeStreak = mistakeTrail.length
@@ -42,6 +45,18 @@ export default function Buddy({
         emoticon = mistakeStreakEmoticons[mistakeStreak - 1] ?? "🙃"
     }
 
+    if (revealNos.length) {
+        emoticon =  "😲"
+    }
+
+    if (revealNos.length && incorrectStreak) {
+        emoticon = "😳"
+    }
+
+    if (isSpellingOver && revealNos.length && !showAns) {
+        emoticon = "😔"
+    }
+
     if (isPerfectSpelling) {
         emoticon = "🥳"
     }
@@ -50,15 +65,11 @@ export default function Buddy({
         emoticon = "🤡"
     }
 
-    if (revealNos.length) {
-        emoticon = !(incorrectStreak > 1) ? "😲" : "😳"
-    }
-
     if (isDisasterSpelling) {
         emoticon = "😭"
     }
 
-    if (mistakeStreak === 42) {
+    if (mistakeStreak === 15) {
         emoticon = "👽" // Ayy LMAO
     }
 
@@ -78,7 +89,7 @@ export default function Buddy({
 
         //setEmo(emoticon)
         
-        if (!mistakeTrail.length && !inputKeys.length || isSpellingOver || isSpellingOverAndExtraKey) {
+        if (!mistakeTrail.length && !correctMap?.length || isSpellingOver || isSpellingOverAndExtraKey) {
             return
         }
 
