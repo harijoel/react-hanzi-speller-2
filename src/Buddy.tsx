@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { SpelledKey } from './types'
+import { SpelledKey, TouchedEl } from './types'
 import { countConsecutiveLastTrueValues, playTest } from './util'
 
 type BuddyProps = {
@@ -10,6 +10,7 @@ type BuddyProps = {
     showAns: boolean
     isSpellingOver: boolean
     isSpellingOverAndExtraKey: boolean
+    lastTouchedEl: React.MutableRefObject<TouchedEl>
     resetState: (newWord?: boolean) => void
 }
 
@@ -21,6 +22,7 @@ export default function Buddy({
     showAns, 
     isSpellingOver, 
     isSpellingOverAndExtraKey,
+    lastTouchedEl,
     resetState}: BuddyProps) {
 
     
@@ -120,6 +122,7 @@ export default function Buddy({
                 <span className='emoji' onClick={() => {
                     setClickToggle(bool => !bool)
                     if (emo === "😝") {
+                        lastTouchedEl.current = "emoji"
                         playTest()
                         resetState()
                     }

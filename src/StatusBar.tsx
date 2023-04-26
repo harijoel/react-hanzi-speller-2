@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { SpelledKey } from './types'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { SpelledKey, TouchedEl } from './types'
 import StatDelta from './StatDelta'
 
 type StatusBarProps = {
@@ -10,6 +10,8 @@ type StatusBarProps = {
     mistakeTrail: string[]
     inputSylArray: SpelledKey[][]
     isSpellingOver: boolean
+    isSpellingOverAndExtraKey: boolean
+    lastTouchedEl: React.MutableRefObject<TouchedEl>
 }
 
 export default function StatusBar({
@@ -19,29 +21,45 @@ export default function StatusBar({
     correctMap, 
     mistakeTrail, 
     inputSylArray, 
-    isSpellingOver}: StatusBarProps) {
+    isSpellingOver,
+    isSpellingOverAndExtraKey,
+    lastTouchedEl}: StatusBarProps) {
 
-    const isSpellingStart = !!mistakeTrail.length || !!correctMap.length
+    const isSpellingStarted = !!mistakeTrail.length || !!correctMap.length
 
-    const spelledKeysCount = correctMap.length
-    const correctKeysCount = correctMap.filter(correctKey => correctKey).length
-    const keyAccuracy = ((correctKeysCount / spelledKeysCount) * 100)
+    const spellingOverImg = useRef({
+        spelledKeysCount: Infinity, 
+        correctKeysCount: 0,
+        spelledHanziCount: Infinity, 
+        correctSpelledHanziCount: 0
+    })
 
-    const spelledHanziCount = inputSylArray.length
-    const correctSpelledHanziCount = inputSylArray.filter(sylArr => { 
-        const sylArrMapped = sylArr.map(sk => sk.inputKey === sk.correctKey)
-        return !sylArrMapped.includes(false)
-    }).length
-    const hanziAccuracy = ((correctSpelledHanziCount / spelledHanziCount) * 100)
+    useEffect(() => {
+        if (isSpellingOver || isSpellingOverAndExtraKey) {
+            spellingOverImg.current = {
+                spelledKeysCount: correctMap.length, 
+                correctKeysCount: correctMap.filter(correctKey => correctKey).length,
+                spelledHanziCount: inputSylArray.length, 
+                correctSpelledHanziCount: inputSylArray.filter(sylArr => { 
+                    const sylArrMapped = sylArr.map(sk => sk?.inputKey === sk?.correctKey)
+                    return !sylArrMapped.includes(false)
+                    }).length
+            }
+        }
+    }, [isSpellingOver, isSpellingOverAndExtraKey])
+
 
     const t1 = useRef(0)
-    const t2 = useRef(0)
+
     const [timeVars, setTimeVars] = useState({
+        newWordTime: t1.current,
+
         timeDif: 0, 
         keySpeed: 0, 
         keySpeedDif: 0, 
         avgHanziTime: 0,
         avgHanziTimeDif: 0,
+
         keyAccuracy: 0,
         keyAccuracyDif: 0,
         hanziAccuracy: 0,
@@ -49,54 +67,68 @@ export default function StatusBar({
     })
 
     useEffect(() => {
-        if (isSpellingStart && !isSpellingOver) {
-            t1.current = performance.now()
+        console.log(lastTouchedEl.current, " was touched!")
+        t1.current = performance.now()
+        if (lastTouchedEl.current !== "none") {
+            setTimeVars(oldState => { return {
+                ...oldState,
+                newWordTime: t1.current
+            }})
         }
-    
-        if (isSpellingOver) {
-            t2.current = performance.now()
-            setTimeVars(oldState => { 
-                const timeDif = (t2.current - t1.current) / 1000
-                const keySpeed = spelledKeysCount / timeDif
-                const avgHanziTime = timeDif / spelledHanziCount
-                const keyAccuracy = (correctKeysCount / spelledKeysCount) * 100
-                //const hanziAccuracy = hanziAccuracy
-                return {...oldState, 
-                    timeDif: timeDif, 
-                    keySpeed: keySpeed,
-                    keySpeedDif: keySpeed - oldState.keySpeed,
-                    avgHanziTime: timeDif / spelledHanziCount,
-                    avgHanziTimeDif: avgHanziTime - oldState.avgHanziTime,
-                    keyAccuracy: keyAccuracy,
-                    keyAccuracyDif: keyAccuracy - oldState.keyAccuracy,
-                    hanziAccuracy: hanziAccuracy,
-                    hanziAccuracyDif: hanziAccuracy - oldState.hanziAccuracy 
-                }
-            })
+    }, [lastTouchedEl.current, wordId])
+
+
+    useEffect(() => {
+
+        
+        if (lastTouchedEl.current !== "none") {
+            return
         }
-    }, [isSpellingOver, isSpellingStart])
+        //t1.current = performance.now()
+        setTimeVars(oldState => { 
+            const newWordTime = t1.current
+            const timeDif = (newWordTime - oldState.newWordTime) / 1000
+            const keySpeed = spellingOverImg.current.spelledKeysCount === Infinity ? 0 : (spellingOverImg.current.spelledKeysCount / timeDif)
+            const avgHanziTime = (timeDif / spellingOverImg.current.spelledHanziCount)
+            const keyAccuracy = (spellingOverImg.current.correctKeysCount / spellingOverImg.current.spelledKeysCount) * 100
+            const hanziAccuracy = ((spellingOverImg.current.correctSpelledHanziCount / spellingOverImg.current.spelledHanziCount) * 100)
+            return {...oldState, 
+                newWordTime: newWordTime,
+                timeDif: timeDif, 
+                keySpeed: keySpeed,
+                keySpeedDif: keySpeed - oldState.keySpeed,
+                avgHanziTime: timeDif / spellingOverImg.current.spelledHanziCount,
+                avgHanziTimeDif: avgHanziTime - oldState.avgHanziTime,
+
+                keyAccuracy: keyAccuracy,
+                keyAccuracyDif: keyAccuracy - oldState.keyAccuracy,
+                hanziAccuracy: hanziAccuracy,
+                hanziAccuracyDif: hanziAccuracy - oldState.hanziAccuracy
+            }
+        })
+    }, [wordId])
 
 
 
     return (
         <div className="status-bar">
-            <div>
+            <div className="stat speed-stat">
                 Speed: {timeVars.keySpeed.toFixed(2)} key/s (<StatDelta statDelta={timeVars.keySpeedDif} />)
             </div>
 
-            <div>
+            <div className="stat time-stat">
                 Time: {timeVars.timeDif.toFixed(2)} s
             </div>
 
-            <div>
-                Hanzi avg: {timeVars.avgHanziTime.toFixed(1)} s (<StatDelta statDelta={timeVars.avgHanziTimeDif} />)
+            <div className="stat hanzi-time-stat">
+                Hanzi avg: {timeVars.avgHanziTime.toFixed(1)} s (<StatDelta statDelta={timeVars.avgHanziTimeDif} invert={true} />)
             </div>
 
-            <div>
+            <div className="stat acc-stat">
                 Key accuracy: {timeVars.keyAccuracy.toFixed(2)}% (<StatDelta statDelta={timeVars.keyAccuracyDif} />)
             </div>
 
-            <div>
+            <div className="stat hanzi-acc-stat">
                 Hanzi accuracy: {timeVars.hanziAccuracy.toFixed(2)}% (<StatDelta statDelta={timeVars.hanziAccuracyDif} />)
             </div>
 

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, SetStateAction, useEffect, useRef } from 'react'
-import { HSKword, Setting, SpelledKey } from './types'
+import { HSKword, Setting, SpelledKey, TouchedEl } from './types'
 
 const mitakeToleranceNos = [0, 1, 2, 3]
 const modes = ["noTones", "withTones", "onlyTones"]
@@ -9,18 +9,21 @@ type SettingsProps = {
     resetState: (newWord: boolean) => void
     setSettings: (value: SetStateAction<Setting>) => void
     settings: Setting
+    lastTouchedEl: React.MutableRefObject<TouchedEl>
 }
 
 export default function Settings({
     resetState, 
     setSettings, 
-    settings}: SettingsProps) {
+    settings,
+    lastTouchedEl}: SettingsProps) {
 
     const hskLevelEl = useRef<HTMLSelectElement>(null)
 
     function handleNewWord(e: MouseEvent) {
         e.preventDefault()
         console.log("$$$ prevented default $$$")
+        lastTouchedEl.current = "new-word-btn"
         resetState(true)
     }
     

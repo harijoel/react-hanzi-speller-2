@@ -10,9 +10,26 @@ select {
     margin: auto auto;
 }
 
+
 .settings {
     color: black;
     display: flex;
+}
+
+.form-group {
+    padding: 5px;
+    margin: 5px 5px;
+    border-right: 1px solid gray;
+    font-weight: bold;
+}
+
+
+.status-bar {
+    display: flex;
+}
+
+.stat {
+    margin-right: 0.5em;
 }
 
 .translation {
@@ -30,12 +47,7 @@ select {
     padding-bottom: 0.2em;
 }
 
-.form-group {
-    padding: 5px;
-    margin: 5px 5px;
-    border-right: 1px solid gray;
-    font-weight: bold;
-}
+
 
 .chineseword, .chinesewordT, .buddy-container {
     display: flex;

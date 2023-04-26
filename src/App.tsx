@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import hsk from './hsk-vocabulary/hsk-6.json'
 import ChineseWord from "./ChineseWord"
 import Settings from "./Settings"
-import { SpelledKey, Setting, HSKword } from "./types"
+import { SpelledKey, Setting, HSKword, TouchedEl } from "./types"
 import { getDynamicIndex, getWordArray, playKeypressFX, playMistakeFX, playWinFX, sylibalizeInput } from "./util"
 
 import './app.css'
@@ -21,7 +21,7 @@ function App() {
   const [inputKeys, setInputKeys] = useState<SpelledKey[]>([])
   const [mistakeTrail, setMistakeTrail] = useState<string[]>([])
   const [revealNos, setRevealNos] = useState<number[]>([])
-  //const [elementclick, setElementclick] = useState(false)
+  const lastTouchedEl = useRef<TouchedEl>("none")
 
   // Reset State
   const resetState = useCallback((newWord: boolean = false) => {
@@ -29,7 +29,11 @@ function App() {
     setRevealNos([])
     setMistakeTrail([])
     if (newWord) {
-      setHskWord(getRandomHSK())
+      let randomHSK = getRandomHSK()
+      while (randomHSK.metadata.id === hskWord.metadata.id) {
+        randomHSK = getRandomHSK()
+      }
+      setHskWord(randomHSK)
     }
   }, [])
 
@@ -187,6 +191,7 @@ function App() {
 
       // Start new word if game is over
       if (isSpellingOver || isSpellingOverAndExtraKey) {
+        lastTouchedEl.current = "none"
         playWinFX()
         resetState(true)
       } 
@@ -213,6 +218,7 @@ function App() {
       <Settings resetState={resetState}
                 setSettings={setSettings}
                 settings={settings}
+                lastTouchedEl={lastTouchedEl}
       />
 
       <StatusBar  
@@ -223,6 +229,8 @@ function App() {
         mistakeTrail={mistakeTrail}
         inputSylArray={inputSylArray}
         isSpellingOver={isSpellingOver}
+        isSpellingOverAndExtraKey={isSpellingOverAndExtraKey}
+        lastTouchedEl={lastTouchedEl}
       />
       
       <Buddy 
@@ -233,6 +241,7 @@ function App() {
         showAns={showAns} 
         isSpellingOver={isSpellingOver}
         isSpellingOverAndExtraKey={isSpellingOverAndExtraKey} 
+        lastTouchedEl={lastTouchedEl}
         resetState={resetState}
       />
 

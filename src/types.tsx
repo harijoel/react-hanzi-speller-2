@@ -36,3 +36,5 @@ export type HSKword = {
       traditional: string;
   };
 }
+
+export type TouchedEl = "none" | "emoji" | "new-word-btn"
