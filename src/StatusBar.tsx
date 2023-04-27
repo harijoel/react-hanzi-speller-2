@@ -70,9 +70,26 @@ export default function StatusBar({
         console.log(lastTouchedEl.current, " was touched!")
         t1.current = performance.now()
         if (lastTouchedEl.current !== "none") {
+            spellingOverImg.current = {
+                spelledKeysCount: Infinity, 
+                correctKeysCount: 0,
+                spelledHanziCount: Infinity, 
+                correctSpelledHanziCount: 0
+            }
             setTimeVars(oldState => { return {
                 ...oldState,
-                newWordTime: t1.current
+                newWordTime: t1.current,
+
+                timeDif: 0, 
+                keySpeed: 0, 
+                keySpeedDif: 0, 
+                avgHanziTime: 0,
+                avgHanziTimeDif: 0,
+
+                keyAccuracy: 0,
+                keyAccuracyDif: 0,
+                hanziAccuracy: 0,
+                hanziAccuracyDif: 0
             }})
         }
     }, [lastTouchedEl.current, wordId])
@@ -112,23 +129,23 @@ export default function StatusBar({
 
     return (
         <div className="status-bar">
-            <div className="stat speed-stat">
+            <div className="stat speed-stat" style={{width: "12em"}}>
                 Speed: {timeVars.keySpeed.toFixed(2)} key/s (<StatDelta statDelta={timeVars.keySpeedDif} />)
             </div>
 
-            <div className="stat time-stat">
-                Time: {timeVars.timeDif.toFixed(2)} s
+            <div className="stat time-stat" style={{width: "7em"}}>
+                Time: {timeVars.timeDif > 99 ? "99+" : timeVars.timeDif.toFixed(1)} s
             </div>
 
-            <div className="stat hanzi-time-stat">
-                Hanzi avg: {timeVars.avgHanziTime.toFixed(1)} s (<StatDelta statDelta={timeVars.avgHanziTimeDif} invert={true} />)
+            <div className="stat hanzi-time-stat" style={{width: "12em"}}>
+                Hanzi avg: {timeVars.avgHanziTime > 99 ? "99+" : timeVars.avgHanziTime.toFixed(2)} s (<StatDelta statDelta={timeVars.avgHanziTimeDif} invert={true} />)
             </div>
 
-            <div className="stat acc-stat">
+            <div className="stat acc-stat" style={{width: "15em"}}>
                 Key accuracy: {timeVars.keyAccuracy.toFixed(2)}% (<StatDelta statDelta={timeVars.keyAccuracyDif} />)
             </div>
 
-            <div className="stat hanzi-acc-stat">
+            <div className="stat hanzi-acc-stat" style={{width: "15.5em"}}>
                 Hanzi accuracy: {timeVars.hanziAccuracy.toFixed(2)}% (<StatDelta statDelta={timeVars.hanziAccuracyDif} />)
             </div>
 

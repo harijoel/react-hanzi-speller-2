@@ -11,6 +11,8 @@ type SpellerProps = {
     showAns: boolean
     isReveal: boolean
     isFlip: boolean
+    active: boolean
+    isWarning: boolean
 }
 
 export default function Speller({
@@ -22,13 +24,18 @@ export default function Speller({
     correctMap, 
     showAns,
     isReveal, 
-    isFlip}: SpellerProps) {
-
+    isFlip,
+    active,
+    isWarning }: SpellerProps) {
+    
     const isFinish = spelledKeys.length >= textToType?.length 
     const charColors = correctMap.map(isCorrect => isCorrect ? "blue" : "red" )
     const isOnlyTones = !isNaN(parseInt(textToType))
 
     const showSpace = !spelledKeys.length && !showAns && !isReveal && !isOnlyTones // review this for learning
+
+    const revealedTextArr = textToType.split('').slice(spelledKeys.length, textToType.length)
+    const cursorBackgroundColor = (isWarning || isReveal && !showAns) ? "#ffe9e9" : "#eae9ff" // red : blue aliceblue
 
     return (
         <div className={`speller ${isFlip ? "#back" : ""}`}>
@@ -37,7 +44,7 @@ export default function Speller({
             
             {spelledKeys.map((sKey, i) => {
                 return (
-                    <span key={hanziKey+"-s-"+i} style={{color: charColors[i]}} >
+                    <span key={hanziKey+"-s-"+i} style={{color: charColors[i]}} className='speller-spelling' title={sKey.inputKey}>
                         <>
                             {isFinish // If sylable is done typing
                                 ? (!isOnlyTones 
@@ -52,8 +59,14 @@ export default function Speller({
             })}
 
             {(showAns || isReveal) && 
-                <span className="reveal-text">
-                    { textToType.slice(spelledKeys.length, textToType.length) }
+                <span className={`reveal-text ${active ? "active" : ""}`} >
+                    {revealedTextArr.map((char, i) => 
+                        <span 
+                            key={"rt-"+i} 
+                            style={{backgroundColor: (i===0 && active )? cursorBackgroundColor : "", color: (i===0 && active )? "gray" : "" }}
+                        >
+                            {char}
+                        </span>)}
                 </span> }
 
             {showSpace && <div className="temporal-space reveal-text">??</div>}

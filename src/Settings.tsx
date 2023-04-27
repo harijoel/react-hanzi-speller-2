@@ -123,7 +123,7 @@ export default function Settings({
                 </select>
             </div>
 
-            <div className="form-group">
+            <div className="form-group form-group-vocab">
                 <label htmlFor="vocab">HSK Vocabulary: </label>
                 <select name="vocab" id="vocab" defaultValue={5} ref={hskLevelEl}>
                     {hskLevels.map(level => <option key={"hsk-"+level} value={level}>HSK-{level}</option>)}

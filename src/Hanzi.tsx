@@ -38,7 +38,7 @@ export default function Hanzi({
     const isCharVisible = isFinish || !hideChars || isReveal
     const animationClass = animations && !isCharVisible ? "flip" : ""
 
-    const isWarning = mistakeTrail?.length && active
+    const isWarning = !!mistakeTrail?.length && active
     const borderColor = isWarning ? "red" : "blue"
     
     return (
@@ -62,6 +62,8 @@ export default function Hanzi({
                         showAns={showAns}
                         isReveal={isReveal}
                         isFlip={!isCharVisible}
+                        active={active}
+                        isWarning={isWarning}
             />
         </div>
         
