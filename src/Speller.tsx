@@ -53,7 +53,7 @@ export default function Speller({
             <div className='spelled-key-container' style={{display:"inline"}} >  
                 {spelledKeys.map((sKey, i) => {
                     return (
-                        <span className='speller-spelling' style={{color: charColors[i]}} title={sKey.inputKey} key={hanziKey+"-s-"+i}>
+                        <span className='speller-spelling' style={{color: charColors[i]}} title={sKey.inputKey[0]} key={hanziKey+"-s-"+i}>
                             <>
                                 {isFinish // If sylable is done typing
                                     ? (!isOnlyTones 

@@ -41,7 +41,7 @@ export default function StatusBar({
                 correctKeysCount: correctMap.filter(correctKey => correctKey).length,
                 spelledHanziCount: inputSylArray.length, 
                 correctSpelledHanziCount: inputSylArray.filter(sylArr => { 
-                    const sylArrMapped = sylArr.map(sk => sk?.inputKey === sk?.correctKey)
+                    const sylArrMapped = sylArr.map(sk => sk?.inputKey[0] === sk?.correctKey)
                     return !sylArrMapped.includes(false)
                     }).length
             }
@@ -166,12 +166,12 @@ export default function StatusBar({
                 (<StatDelta statDelta={timeVars.hanziAccuracyDif} />)
             </div>
 
-            {/* <h3 className="input-visual">
+            <h3 className="input-visual">
 
                 {vocabularySetId}:#{wordId}
                 :$
                 {inputKeys.map((c, i) => {
-                    const isCorrect = c.correctKey == c.inputKey
+                    const isCorrect = c.correctKey == c.inputKey[0]
                     const color = isCorrect ? "#aaa" : "red"
                     return (
                         <span key={"header-"+i} >
@@ -183,7 +183,7 @@ export default function StatusBar({
 
                 |{mistakeTrail.map((mk, i) => <span key={"mk-"+i} style={{color: "black"}}>{mk}</span> )}
 
-            </h3> */}
+            </h3>
         </div>
     )
 }

@@ -24,6 +24,14 @@ ul {
     padding: 0;
 }
 
+table {
+    border-collapse: collapse;
+}
+
+/* td, th {
+    border: 1px solid hsla(0, 0%, 0%, 0.102);
+} */
+
 .buddy {
     margin: auto auto;
 }
@@ -169,11 +177,29 @@ ul {
 }
 
 .exact-input {
-    background-color: beige;
     text-align: center;
     font-size: 25px;
+    color: rgba(0, 0, 0, 0.508);
+    padding: 0.25rem 0;
+    border-radius: 6px;
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.212);
+    background-color: white;
     /* position: absolute;
     top: 515x; */
+}
+
+.exact-input > table {
+    margin: auto;
+}
+
+td {
+    margin-top: 0;
+    padding: 0;
+}
+
+tr {
+    position: relative;
+    line-height: 0.85em;
 }
 
 /* .speller-spelling:hover {

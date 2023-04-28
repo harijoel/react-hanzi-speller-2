@@ -81,7 +81,7 @@ function App() {
   const normalIndex = inputSylArray.length - 1
   const dynamicIndex = getDynamicIndex(inputSylArray, textToTypeSyl_Array)
   const isPatternStop = inputKeys.length > textToType.length - mistakeCountTolerance - 1
-  const correctMap = inputKeys.map(sk => sk.inputKey === sk.correctKey)
+  const correctMap = inputKeys.map(sk => sk.inputKey[0] === sk.correctKey)
   // ##  End of dependent variables  ## //
 
   // Add input key functionality
@@ -90,12 +90,12 @@ function App() {
       playKeypressFX()
       setInputKeys(currentSpelledKeys => 
         [...currentSpelledKeys,  
-        { inputKey: 
+        { inputKey: [
           !revealNos.length || (showAns && hideChars) // if not reveal mode
             ? (mistakeTrail.length                      // if there is mistake
               ? mistakeTrail[0]                           // set that mistake
               : key)                                      // else set correct
-            : "*",                              // else set as missing-mistake
+            : "*", ...mistakeTrail.slice(1)],         // else set as missing-mistake
         correctKey: key
         }])
       setMistakeTrail([])
@@ -118,7 +118,7 @@ function App() {
     const textAhead = textToType.slice(index+1, index+1 + mistakeCountTolerance)
     const remainingInputKeys: SpelledKey[] = textAhead.map(
       (correctKey, i) => {
-        return {inputKey: correctKey, correctKey: correctKey}
+        return {inputKey: [correctKey], correctKey: correctKey}
       })
     
     // Compare text ahead with trail patterns
@@ -137,7 +137,7 @@ function App() {
     // Display correct text ahead if pattern is found in mistake trail
     if (patternFound) {
       playKeypressFX()
-      const wrongInputKey: SpelledKey = {inputKey: inputKey, correctKey: textToType[index]}
+      const wrongInputKey: SpelledKey = {inputKey: [inputKey], correctKey: textToType[index]}
       setInputKeys(currentSpelledKeys => [...currentSpelledKeys,
                                           wrongInputKey,
                                           ...remainingInputKeys])
@@ -174,7 +174,7 @@ function App() {
   // Handle extra keypress
   useEffect(() => {
     if (isSpellingOver && mistakeTrail.length && mode !== "onlyTones") {
-      setInputKeys(oldInputKeys => [...oldInputKeys, {inputKey: mistakeTrail[0], correctKey: "..."}])
+      setInputKeys(oldInputKeys => [...oldInputKeys, {inputKey: [mistakeTrail[0]], correctKey: "..."}])
     }
   }, [isSpellingOver, mistakeTrail, mode])
 

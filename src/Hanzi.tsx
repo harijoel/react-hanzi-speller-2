@@ -32,7 +32,7 @@ export default function Hanzi({
     const pinyinRoman = hanziPinyinChar.pinyinNo
     const textToType = hanziPinyinChar.textToType_Syl
     
-    const correctMap = spelledKeys.map((sKey, i) => sKey.inputKey === sKey.correctKey)
+    const correctMap = spelledKeys.map((sKey, i) => sKey.inputKey[0] === sKey.correctKey)
     const isAnyMistakes = correctMap.some(correct => !correct)
 
     const isFinish = spelledKeys.length >= textToType?.length
@@ -44,7 +44,7 @@ export default function Hanzi({
 
     const [isMouseEnter, setIsMouseEnter] = useState(false)
     const [isMouseDown, setIsMouseDown] = useState(false)
-    const isExactInputDisplayed = true //isMouseEnter && isMouseDown
+    const isExactInputDisplayed = isMouseEnter && isMouseDown
     
     return (
         <div className="hanzi-speller-container" style={{justifyContent: "center"}}>
@@ -77,7 +77,7 @@ export default function Hanzi({
                         active={active}
                         isWarning={isWarning}
             />
-            {isExactInputDisplayed && <ExactInput hanziKey={hanziKey} spelledKeys={spelledKeys} /> }
+            {isExactInputDisplayed && <ExactInput hanziKey={hanziKey} spelledKeys={spelledKeys} mistakeTrail={mistakeTrail} /> }
         </div>
         
     )

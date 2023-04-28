@@ -1,5 +1,5 @@
 export type SpelledKey = {
-    inputKey: string
+    inputKey: string[]
     correctKey: string
   }
 

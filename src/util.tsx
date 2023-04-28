@@ -144,3 +144,35 @@ export function playWinFX() {
     sound.volume = 0.3
     sound.play()
 }
+
+export function transposeArray(array: (string | null)[][]) {
+    if (!array[0]) return []
+    // Get the number of rows and columns
+    const numRows = array.length;
+    const numCols = array[0].length;
+  
+    // Create a new array to store the transposed elements
+    const transposedArray: (string | null)[][] = [];
+  
+    // Iterate over the rows and columns of the original array
+    for (let j = 0; j < numCols; j++) {
+      transposedArray[j] = [];
+      for (let i = 0; i < numRows; i++) {
+        transposedArray[j][i] = array[i][j];
+      }
+    }
+  
+    return transposedArray;
+  }
+
+ export function fillMatrix(arrayOfArrays: string[][]) {
+
+    const desiredLength = Math.max( ...(arrayOfArrays.map(arr => arr.length)) )
+    const arrayNumber = arrayOfArrays.length
+    
+    const filledArrayofArrays: (string | null)[][] = arrayOfArrays.map(arr => 
+        [...arr, ...Array(desiredLength - arr.length).fill(null)])
+    
+        return filledArrayofArrays
+    }
+    
