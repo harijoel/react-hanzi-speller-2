@@ -148,6 +148,7 @@ table {
     font-size: 90px;
     backface-visibility: hidden;
     padding-top: 8px;
+    border-radius: 10px;
 }
 
 .mistake {
@@ -195,6 +196,8 @@ table {
 td {
     margin-top: 0;
     padding: 0;
+    text-align: center;
+    vertical-align: middle;
 }
 
 tr {

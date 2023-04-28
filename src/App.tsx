@@ -82,21 +82,19 @@ function App() {
   const dynamicIndex = getDynamicIndex(inputSylArray, textToTypeSyl_Array)
   const isPatternStop = inputKeys.length > textToType.length - mistakeCountTolerance - 1
   const correctMap = inputKeys.map(sk => sk.inputKey[0] === sk.correctKey)
+  const isReveal = !!revealNos.length && (!showAns || !hideChars)
   // ##  End of dependent variables  ## //
 
   // Add input key functionality
   const addInputKey = useCallback(
     (key: string, mistakeTrail: string[]) => {
       playKeypressFX()
+      const correctKey = key
+      const inputTail = isReveal ? ['-', correctKey] : [correctKey]
       setInputKeys(currentSpelledKeys => 
         [...currentSpelledKeys,  
-        { inputKey: [
-          !revealNos.length || (showAns && hideChars) // if not reveal mode
-            ? (mistakeTrail.length                      // if there is mistake
-              ? mistakeTrail[0]                           // set that mistake
-              : key)                                      // else set correct
-            : "*", ...mistakeTrail.slice(1)],         // else set as missing-mistake
-        correctKey: key
+        { inputKey: [...mistakeTrail, ...inputTail],         // else set as missing-mistake
+      correctKey: key
         }])
       setMistakeTrail([])
     },
@@ -122,22 +120,22 @@ function App() {
       })
     
     // Compare text ahead with trail patterns
-    let inputKey = mistakeTrail[0]
+    let inputKey = [mistakeTrail[0]]
     let patternFound = false
       // case: Absent key
     if (JSON.stringify(mistakesFromAbsent) === JSON.stringify(textAhead) && mode !== "onlyTones") {
-      inputKey = "*"
+      inputKey = ["-"]
       patternFound = true
     }
       // case: Mistyped key
     if (JSON.stringify(mistakesFromMistype) === JSON.stringify(textAhead)) {
-      inputKey = mistakeTrail[0]
+      inputKey = [mistakeTrail[0], "-"]
       patternFound = true
     }
     // Display correct text ahead if pattern is found in mistake trail
     if (patternFound) {
       playKeypressFX()
-      const wrongInputKey: SpelledKey = {inputKey: [inputKey], correctKey: textToType[index]}
+      const wrongInputKey: SpelledKey = {inputKey: inputKey, correctKey: textToType[index]}
       setInputKeys(currentSpelledKeys => [...currentSpelledKeys,
                                           wrongInputKey,
                                           ...remainingInputKeys])
@@ -161,6 +159,7 @@ function App() {
       else {
       // Handle Incorrect keypress
         playMistakeFX()
+        if (isReveal) return
         setMistakeTrail(oldMistakeTrail => [...oldMistakeTrail, key])
         console.log(mistakeTrail.length)
       }

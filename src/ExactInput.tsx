@@ -13,17 +13,15 @@ type ExactInputProps = {
 export default function ExactInput({hanziKey, spelledKeys, mistakeTrail}: ExactInputProps) {
     const maxInputNoDisplay = 4
     const arrayOfArrays = spelledKeys.map(sk => { 
-        const isCorrect = sk.inputKey[0] === sk.correctKey
-        const bigInputKeys = sk.inputKey.length > maxInputNoDisplay ? [...sk.inputKey.slice(0, maxInputNoDisplay), "..."] : sk.inputKey
-        if (isCorrect) {
-            return sk.inputKey 
-        }
-        return [...bigInputKeys, sk.correctKey]
-         })
-
-    
+        const lastInput = sk.inputKey[sk.inputKey.length - 1]
+        const sizedInputKeys = sk.inputKey.length > maxInputNoDisplay 
+                                    ? [...sk.inputKey.slice(0, maxInputNoDisplay), "⋮", lastInput] 
+                                    : sk.inputKey
+        return sizedInputKeys
+    })
     const inputMatrix = fillMatrix(arrayOfArrays)
     const transposedInputMatrix = transposeArray(inputMatrix)
+
     return (
         <div className='exact-input'>
             <table>

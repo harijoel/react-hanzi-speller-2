@@ -44,7 +44,7 @@ export default function Hanzi({
 
     const [isMouseEnter, setIsMouseEnter] = useState(false)
     const [isMouseDown, setIsMouseDown] = useState(false)
-    const isExactInputDisplayed = isMouseEnter && isMouseDown
+    const isExactInputDisplayed = isMouseEnter && isMouseDown && !!spelledKeys.length
     
     return (
         <div className="hanzi-speller-container" style={{justifyContent: "center"}}>
