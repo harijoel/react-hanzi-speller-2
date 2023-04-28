@@ -124,7 +124,7 @@ export default function Settings({
             </div>
 
             <div className="form-group form-group-vocab">
-                <label htmlFor="vocab">HSK Vocabulary: </label>
+                <label htmlFor="vocab">HSK Level: </label>
                 <select name="vocab" id="vocab" defaultValue={5} ref={hskLevelEl}>
                     {hskLevels.map(level => <option key={"hsk-"+level} value={level}>HSK-{level}</option>)}
                 </select>

@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { HanziPinyin, SpelledKey } from './types'
 import Speller from './Speller'
+import ExactInput from './ExactInput'
 
 type HanziProps = {
     hanziKey?: string
@@ -40,15 +41,26 @@ export default function Hanzi({
 
     const isWarning = !!mistakeTrail?.length && active
     const borderColor = isWarning ? "red" : "blue"
+
+    const [isMouseEnter, setIsMouseEnter] = useState(false)
+    const [isMouseDown, setIsMouseDown] = useState(false)
+    const isExactInputDisplayed = true //isMouseEnter && isMouseDown
     
     return (
-        <div className="hanzi-speller-container">
+        <div className="hanzi-speller-container" style={{justifyContent: "center"}}>
             <div className={"hanzi " + animationClass} style={{borderColor: active ? borderColor : ""}}>
                 
                 <div style={{
                         color: isAnyMistakes ? "red" : (isFinish ? "black" : "rgb(90, 90, 90)"), 
                         visibility: isCharVisible? "visible" : "hidden"}} 
                      className={"character"} 
+                     onMouseEnter={() => setIsMouseEnter(true)}
+                     onMouseLeave={() => {
+                        setIsMouseEnter(false) 
+                        setIsMouseDown(false) 
+                        return }}
+                     onMouseDown={() => setIsMouseDown(true)}
+                     onMouseUp={() => setIsMouseDown(false)}
                 >
                     {character}
                 </div>
@@ -65,6 +77,7 @@ export default function Hanzi({
                         active={active}
                         isWarning={isWarning}
             />
+            {isExactInputDisplayed && <ExactInput hanziKey={hanziKey} spelledKeys={spelledKeys} /> }
         </div>
         
     )

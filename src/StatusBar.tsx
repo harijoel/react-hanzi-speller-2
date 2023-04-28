@@ -130,41 +130,60 @@ export default function StatusBar({
     return (
         <div className="status-bar">
             <div className="stat speed-stat" style={{width: "12em"}}>
-                Speed: {timeVars.keySpeed.toFixed(2)} key/s (<StatDelta statDelta={timeVars.keySpeedDif} />)
+                <span className='stat-label'>Speed: </span>
+
+                {timeVars.keySpeed.toFixed(2)} key/s 
+                {" ("}<StatDelta statDelta={timeVars.keySpeedDif} />{")"}
             </div>
+
 
             <div className="stat time-stat" style={{width: "7em"}}>
-                Time: {timeVars.timeDif > 99 ? "99+" : timeVars.timeDif.toFixed(1)} s
+                <span className='stat-label'>Time: </span>
+                {timeVars.timeDif > 99 ? "99+" : timeVars.timeDif.toFixed(1)} s
             </div>
+
 
             <div className="stat hanzi-time-stat" style={{width: "12em"}}>
-                Hanzi avg: {timeVars.avgHanziTime > 99 ? "99+" : timeVars.avgHanziTime.toFixed(2)} s (<StatDelta statDelta={timeVars.avgHanziTimeDif} invert={true} />)
+                <span className='stat-label'>Hanzi avg: </span>
+
+                {timeVars.avgHanziTime > 99 ? "99+" : timeVars.avgHanziTime.toFixed(2)} s 
+                (<StatDelta statDelta={timeVars.avgHanziTimeDif} invert={true} />)
             </div>
+
 
             <div className="stat acc-stat" style={{width: "15em"}}>
-                Key accuracy: {timeVars.keyAccuracy.toFixed(2)}% (<StatDelta statDelta={timeVars.keyAccuracyDif} />)
+                <span className='stat-label'>Key accuracy: </span>
+
+                {timeVars.keyAccuracy.toFixed(2)}% 
+                (<StatDelta statDelta={timeVars.keyAccuracyDif} />)
             </div>
+
 
             <div className="stat hanzi-acc-stat" style={{width: "15.5em"}}>
-                Hanzi accuracy: {timeVars.hanziAccuracy.toFixed(2)}% (<StatDelta statDelta={timeVars.hanziAccuracyDif} />)
+                <span className='stat-label'>Hanzi accuracy: </span>
+
+                {timeVars.hanziAccuracy.toFixed(2)}% 
+                (<StatDelta statDelta={timeVars.hanziAccuracyDif} />)
             </div>
 
-            <h3 className="input-visual">
+            {/* <h3 className="input-visual">
 
                 {vocabularySetId}:#{wordId}
                 :$
                 {inputKeys.map((c, i) => {
-                    const color = c.correctKey == c.inputKey ? "blue" : "red"
+                    const isCorrect = c.correctKey == c.inputKey
+                    const color = isCorrect ? "#aaa" : "red"
                     return (
-                        <span key={"header-"+i} style={{color: color}}>
-                            {c.correctKey}
+                        <span key={"header-"+i} >
+                            { !isCorrect && <span style={{color: "black"}}>,{c.inputKey}:</span> }
+                            <span style={{color: color, fontWeight: !isCorrect ? "bold" : ""}}>{c.correctKey}</span> 
                         </span>
                     )
                 })}
 
-                |{mistakeTrail.map((mk, i) => <span key={"mk-"+i} style={{color: "orange"}}>{mk}</span> )}
+                |{mistakeTrail.map((mk, i) => <span key={"mk-"+i} style={{color: "black"}}>{mk}</span> )}
 
-            </h3>
+            </h3> */}
         </div>
     )
 }

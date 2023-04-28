@@ -95,7 +95,7 @@ function App() {
             ? (mistakeTrail.length                      // if there is mistake
               ? mistakeTrail[0]                           // set that mistake
               : key)                                      // else set correct
-            : "missing",                              // else set as missing-mistake
+            : "*",                              // else set as missing-mistake
         correctKey: key
         }])
       setMistakeTrail([])
@@ -126,7 +126,7 @@ function App() {
     let patternFound = false
       // case: Absent key
     if (JSON.stringify(mistakesFromAbsent) === JSON.stringify(textAhead) && mode !== "onlyTones") {
-      inputKey = "missing"
+      inputKey = "*"
       patternFound = true
     }
       // case: Mistyped key
