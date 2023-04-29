@@ -49,19 +49,6 @@ table {
     font-weight: bold;
 }
 
-.form-group-vocab {
-    background-color: blue;
-    border-radius: 5px;
-}
-
-.form-group-vocab > label {
-    color: white;
-}
-
-.form-group-vocab > label:hover {
-    color: rgb(114, 114, 114);
-}
-
 .status-bar {
     display: flex;
 }

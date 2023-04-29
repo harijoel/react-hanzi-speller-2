@@ -130,7 +130,7 @@ export default function Buddy({
                 }>
                     {emo}
                 </span> 
-                <div className='buddy-message'>Click to activate!</div>  
+                <div className='buddy-message'> </div>  
             </div>
         </div>
     )
