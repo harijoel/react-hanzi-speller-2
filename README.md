@@ -1,7 +1,7 @@
 # react-hanzi-speller-2
 Keybr.com inspired typing algorithm adapted into Chinese characters. Spell Chinese characters with a typing algorithm that has tolerance for mistyped and absent letters.
 
-![hanzispellerpreview](https://user-images.githubusercontent.com/38334911/233826938-4d22001a-79cc-4efa-b7ed-ddd6acba2a58.JPG)
+![image](https://user-images.githubusercontent.com/38334911/235287783-2c6a73b4-b2bc-43bc-b6d3-6d870a47af14.png)
 
 ## Why
 - Strengthen your Chinese knowledge
@@ -39,9 +39,10 @@ Or in the case of an absent key, if the letter 'g' is not input but its two foll
     - Tone **4** represents a falling tone (à)
     - Tone **5** represents a neutral tone (a)
   - **onlyTones** only requires the tones of each character to be input using the numbered notation described above. For example, 女人 "nǚrén" should be input as "32".
-- **HSK Vocabulary** changes the vocabulary pool from a selection of different HSK levels. Currently, the only way to change the HSK Vocabulary is by manually changing the import JSON file on the App.tsx component source code.
+- **HSK Vocabulary** changes the vocabulary pool from a selection of different HSK levels.
 - **New Word** displays a random word from the selected HSK Vocabulary level.
 
 ## More
+- Click and hold on a card to see a more detailed map of the spelling input
 - Double click the emoji to reset the spelling progress of the current word
 - When Show Answer and Hide Characters are both checked on settings, you can press <kbd>Enter</kbd> at any time to reveal the selected hidden character.
