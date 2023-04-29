@@ -11,24 +11,42 @@ type ExactInputProps = {
 // const arrayOfArrays = spelledKeys.map(sk => sk.inputKey) 
 
 export default function ExactInput({hanziKey, spelledKeys, mistakeTrail}: ExactInputProps) {
-    const maxInputNoDisplay = 4
+    let maxInputNoDisplay = 6
     const arrayOfArrays = spelledKeys.map(sk => { 
         const lastInput = sk.inputKey[sk.inputKey.length - 1]
-        const sizedInputKeys = sk.inputKey.length > maxInputNoDisplay 
-                                    ? [...sk.inputKey.slice(0, maxInputNoDisplay), "⋮", lastInput] 
-                                    : sk.inputKey
+        const oneBefLast = sk.inputKey[sk.inputKey.length - 2]
+        const isInputOversized = sk.inputKey.length > maxInputNoDisplay
+        // if (oneBefLast === "-" && isInputOversized) {
+        //     maxInputNoDisplay = maxInputNoDisplay - 1
+        // }
+        // let inputTail = oneBefLast === "-" ? [oneBefLast, lastInput] : [lastInput]
+        // inputTail = isInputOversized ? ["⋮", ...inputTail] : inputTail
+        const inputTail = !isInputOversized 
+                            ? [] 
+                            : oneBefLast === "-" 
+                                ? ["⋮", oneBefLast, lastInput] 
+                                : ["⋮", lastInput]
+        const sizedInputKeys = [...sk.inputKey.slice(0, maxInputNoDisplay - inputTail.length), ...inputTail] 
         return sizedInputKeys
     })
     const inputMatrix = fillMatrix(arrayOfArrays)
     const transposedInputMatrix = transposeArray(inputMatrix)
+
+    if (!spelledKeys.length) {
+        return (
+            <div className='exact-input'>
+                ...
+            </div>
+        )
+    }
 
     return (
         <div className='exact-input'>
             <table>
                 <tbody>
                     {transposedInputMatrix.map((row, i) => 
-                        <tr>{row.map((col, j) => 
-                            <td style={{
+                        <tr key={`${hanziKey}-eitr-${i}`} >{row.map((col, j) => 
+                            <td key={`${hanziKey}-eitd-${i}-${j}`} style={{
                                 color: transposedInputMatrix[i][j] == spelledKeys[j].correctKey ? "blue" : "gray"}}>
                                     {col}
                             </td> )}

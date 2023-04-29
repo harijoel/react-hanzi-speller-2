@@ -132,7 +132,7 @@ table {
     margin-top: 2rem;
 }
 
-.hanzi.flip {
+.hanzi.flipped {
     --rotate-y: 180deg;
 }
 
@@ -173,7 +173,7 @@ table {
     border-radius: 4px;
 }
 
-.spelled-key-container:hover, .character:hover {
+.spelled-key-container:hover {
     background-color: hsla(0, 0%, 24%, 0.086);
 }
 
@@ -228,7 +228,7 @@ tr {
     color: rgb(90, 90, 90);
 }
 
-.emoji, .btn, .speller, label, .character {
+.emoji, .btn, .speller, label, .character, .exact-input {
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */

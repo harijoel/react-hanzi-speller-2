@@ -7,13 +7,9 @@ type TranslationProps = {
 
 export default function Translation({translationData}: TranslationProps) {
     const translations = translationData.split("; ")
-    const testEl = useRef<HTMLDivElement>(null)
-    const [isMouseInTest] = useClickHoldState(testEl)
 
     return (
         <div className='translation'>
-            <div ref={testEl}>TESTING</div>
-            {isMouseInTest && <h1>is IN</h1>}
             <ul className="translation-list">
             {translations.map((tran, i) => 
                 <li key={i+"-"+tran} className='translation-item'>

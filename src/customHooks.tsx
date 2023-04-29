@@ -17,39 +17,44 @@ export function resetArrTypeState(arr: React.Dispatch<React.SetStateAction<any[]
 
 export function useClickHoldState(elRef: React.RefObject<HTMLElement>) {
 
-  const [isMouseIn, setIsMouseIn] = useState<boolean>(false)
-  const [isMouseDown, setIsMouseDown] = useState<boolean>(false)
-  useEffect(() => {
-    const mouseEnterHandle = () => {
-      setIsMouseIn(true)
+  const [isDocMouseDown, setIsDocMouseDown] = useState<boolean>(false)
+  const [isElMouseIn, setIsElMouseIn] = useState<boolean>(false)
+  const isClickHold = isElMouseIn && isDocMouseDown
+
+  useEffect(() => { 
+
+    // Document Down/Up
+    const docMouseDownHandle = () => {
+      setIsDocMouseDown(true)
     }
-    const mouseLeaveHandle = () => {
-      setIsMouseIn(false)
-      setIsMouseDown(false) 
+    const docMouseUpHandle = () => {
+      setIsDocMouseDown(false)
     }
-    const mouseDownHandle = () => {
-      setIsMouseDown(true)
+
+    // Element Enter/Leave
+    const elMouseEnterHandle = () => {
+      setIsElMouseIn(true)
     }
-    const mouseUpHandle = () => {
-      setIsMouseDown(false)
+    const elMouseLeaveHandle = () => {
+      setIsElMouseIn(false)
     }
 
     if (!elRef.current) return
     const el = elRef.current
-
-    el.addEventListener("mouseenter", mouseEnterHandle)
-    el.addEventListener("mouseleave", mouseLeaveHandle)
-    el.addEventListener("mousedown", mouseDownHandle)
-    el.addEventListener("mouseup", mouseUpHandle)
+    
+    el.addEventListener("mouseenter", elMouseEnterHandle)
+    el.addEventListener("mouseleave", elMouseLeaveHandle)
+    document.body.addEventListener("mouseup", docMouseUpHandle)
+    document.body.addEventListener("mousedown", docMouseDownHandle)
 
     return () => {
-      el.removeEventListener("mouseenter", mouseEnterHandle)
-      el.removeEventListener("mouseleave", mouseLeaveHandle)
-      el.removeEventListener("mousedown", mouseDownHandle)
-      el.removeEventListener("mouseup", mouseUpHandle)
+      el.removeEventListener("mouseenter", elMouseEnterHandle)
+      el.removeEventListener("mouseleave", elMouseLeaveHandle)
+      document.body.removeEventListener("mouseup", docMouseUpHandle)
+      document.body.removeEventListener("mousedown", docMouseDownHandle)
     }
   }, [])
 
-  return ([isMouseIn && isMouseDown])
+  return ([isClickHold])
 
 }

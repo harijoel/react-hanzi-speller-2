@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { HanziPinyin, SpelledKey } from './types'
 import Speller from './Speller'
 import ExactInput from './ExactInput'
+import { useClickHoldState } from './customHooks'
 
 type HanziProps = {
     hanziKey?: string
@@ -37,30 +38,24 @@ export default function Hanzi({
 
     const isFinish = spelledKeys.length >= textToType?.length
     const isCharVisible = isFinish || !hideChars || isReveal
-    const animationClass = animations && !isCharVisible ? "flip" : ""
+    const animationClass = (animations && !isCharVisible) ? "flipped" : ""
 
     const isWarning = !!mistakeTrail?.length && active
     const borderColor = isWarning ? "red" : "blue"
 
-    const [isMouseEnter, setIsMouseEnter] = useState(false)
-    const [isMouseDown, setIsMouseDown] = useState(false)
-    const isExactInputDisplayed = isMouseEnter && isMouseDown && !!spelledKeys.length
+    const hanziCharEl = useRef<HTMLDivElement>(null)
+    const [isCharClickHold] = useClickHoldState(hanziCharEl)
+    const isExactInputDisplayed = isCharClickHold
     
     return (
-        <div className="hanzi-speller-container" style={{justifyContent: "center"}}>
+        <div className="hanzi-speller-container" style={{justifyContent: "center"}} ref={hanziCharEl}>
             <div className={"hanzi " + animationClass} style={{borderColor: active ? borderColor : ""}}>
                 
                 <div style={{
                         color: isAnyMistakes ? "red" : (isFinish ? "black" : "rgb(90, 90, 90)"), 
                         visibility: isCharVisible? "visible" : "hidden"}} 
                      className={"character"} 
-                     onMouseEnter={() => setIsMouseEnter(true)}
-                     onMouseLeave={() => {
-                        setIsMouseEnter(false) 
-                        setIsMouseDown(false) 
-                        return }}
-                     onMouseDown={() => setIsMouseDown(true)}
-                     onMouseUp={() => setIsMouseDown(false)}
+                     id={hanziKey}
                 >
                     {character}
                 </div>
