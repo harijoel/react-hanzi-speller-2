@@ -1,5 +1,6 @@
 # react-hanzi-speller-2
 Keybr.com inspired typing algorithm adapted into Chinese characters. Spell Chinese characters with a typing algorithm that has tolerance for mistyped and absent letters.
+https://harijoel.github.io/react-hanzi-speller-2/
 
 ![image](https://user-images.githubusercontent.com/38334911/235287783-2c6a73b4-b2bc-43bc-b6d3-6d870a47af14.png)
 
