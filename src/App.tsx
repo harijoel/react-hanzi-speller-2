@@ -1,8 +1,23 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import hsk from './hsk-vocabulary/hsk-6.json'
+
+import hsk1 from './hsk-vocabulary/hsk-1.json'
+import hsk2 from './hsk-vocabulary/hsk-2.json'
+import hsk3 from './hsk-vocabulary/hsk-3.json'
+import hsk4 from './hsk-vocabulary/hsk-4.json'
+import hsk5 from './hsk-vocabulary/hsk-5.json'
+import hsk6 from './hsk-vocabulary/hsk-6.json'
+const hskVocabularies: any = {
+  hsk1,
+  hsk2,
+  hsk3,
+  hsk4,
+  hsk5,
+  hsk6
+}
+
 import ChineseWord from "./ChineseWord"
 import Settings from "./Settings"
-import { SpelledKey, Setting, HSKword, TouchedEl } from "./types"
+import { SpelledKey, Setting, HSKword, TouchedEl} from "./types"
 import { getDynamicIndex, getWordArray, playKeypressFX, playMistakeFX, playWinFX, sylibalizeInput } from "./util"
 
 import './app.css'
@@ -10,33 +25,12 @@ import Translation from "./Translation"
 import Buddy from "./Buddy"
 import StatusBar from "./StatusBar"
 
-function getRandomHSK(): HSKword {
+function getRandomHSK(hsk: any) {
   const random_HSK_vocab_id = Math.floor(Math.random() * hsk.words.length)
   return hsk.words[random_HSK_vocab_id]
 }
 
 function App() {
-  // State variables
-  const [hskWord, setHskWord] = useState<HSKword>(getRandomHSK)
-  const [inputKeys, setInputKeys] = useState<SpelledKey[]>([])
-  const [mistakeTrail, setMistakeTrail] = useState<string[]>([])
-  const [revealNos, setRevealNos] = useState<number[]>([])
-  const lastTouchedEl = useRef<TouchedEl>("none")
-
-  // Reset State
-  const resetState = useCallback((newWord: boolean = false) => {
-    setInputKeys([])
-    setRevealNos([])
-    setMistakeTrail([])
-    if (newWord) {
-      let randomHSK = getRandomHSK()
-      while (randomHSK.metadata.id === hskWord.metadata.id) {
-        randomHSK = getRandomHSK()
-      }
-      setHskWord(randomHSK)
-    }
-  }, [])
-
   // Settings: default
   const [settings, setSettings] = useState<Setting>({
     mode: "noTones", 
@@ -45,13 +39,21 @@ function App() {
     showAns: false,
     hideChars: false,
     showEnglish: true,
-    animations: true })
+    animations: true,
+    hskLevel: "hsk3" })
   const mistakeCountTolerance = settings.mistakeCountTolerance
   const mode = settings.mode
   const traditional = settings.traditional
   const showAns = settings.showAns
   const hideChars = settings.hideChars
   const animations = settings.animations
+  
+  // State variables
+  const [hskWord, setHskWord] = useState<HSKword>(() => getRandomHSK(hskVocabularies[settings.hskLevel]))
+  const [inputKeys, setInputKeys] = useState<SpelledKey[]>([])
+  const [mistakeTrail, setMistakeTrail] = useState<string[]>([])
+  const [revealNos, setRevealNos] = useState<number[]>([])
+  const lastTouchedEl = useRef<TouchedEl>("none") 
 
   // hanziPinyinArrayWord, textToType #:Once every new word
   const [hanziPinyinArrayWord, 
@@ -84,6 +86,20 @@ function App() {
   const correctMap = inputKeys.map(sk => sk.inputKey[0] === sk.correctKey)
   const isReveal = !!revealNos.length && (!showAns || !hideChars)
   // ##  End of dependent variables  ## //
+
+  // Reset State
+  const resetState = useCallback((newWord: boolean = false) => {
+    setInputKeys([])
+    setRevealNos([])
+    setMistakeTrail([])
+    if (newWord) {
+      let randomHSK = getRandomHSK(hskVocabularies[settings.hskLevel])
+      while (randomHSK.metadata.id === hskWord.metadata.id) {
+        randomHSK = getRandomHSK(hskVocabularies[settings.hskLevel])
+      }
+      setHskWord(randomHSK)
+    }
+  }, [settings.hskLevel])
 
   // Add input key functionality
   const addInputKey = useCallback(
@@ -221,7 +237,7 @@ function App() {
       />
 
       <StatusBar  
-        vocabularySetId={hsk.metadata.identifier} 
+        vocabularySetId={settings.hskLevel}
         wordId={hskWord.metadata.id}
         inputKeys={inputKeys}
         correctMap={correctMap}

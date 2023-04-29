@@ -3,7 +3,7 @@ import { SpelledKey, TouchedEl } from './types'
 import StatDelta from './StatDelta'
 
 type StatusBarProps = {
-    vocabularySetId: string
+    vocabularySetId?: string
     wordId: string | number
     inputKeys: SpelledKey[]
     correctMap: boolean[]
@@ -15,7 +15,7 @@ type StatusBarProps = {
 }
 
 export default function StatusBar({
-    vocabularySetId, 
+    vocabularySetId="xd", 
     wordId, 
     inputKeys, 
     correctMap, 

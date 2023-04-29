@@ -1,5 +1,5 @@
 import React, { ChangeEvent, SetStateAction, useEffect, useRef } from 'react'
-import { HSKword, Setting, SpelledKey, TouchedEl } from './types'
+import { HSKword, HskLevel, Setting, SpelledKey, TouchedEl } from './types'
 
 const mitakeToleranceNos = [0, 1, 2, 3]
 const modes = ["noTones", "withTones", "onlyTones"]
@@ -60,10 +60,20 @@ export default function Settings({
 
     function handleVocabSelect(e: ChangeEvent<HTMLSelectElement>) {
         e.preventDefault()
-        const hskLevel = e.target.value
-        console.log(hskLevel)
+        const hskLevelNo = e.target.value
+        setSettings((oldSettings: Setting) => { 
+            const hskLevel = `hsk${hskLevelNo}`
+            return {
+            ...oldSettings,
+            hskLevel: hskLevel
+        }})
+        
+        console.log("HSK was changed to ", hskLevelNo)
     }
 
+    useEffect(() => {
+        resetState(true)
+    }, [settings.hskLevel])
 
     return (
         <div className="settings" onClick={() => console.log("SETTINGS WAS CLICKED")}>
@@ -125,8 +135,10 @@ export default function Settings({
 
             <div className="form-group form-group-vocab">
                 <label htmlFor="vocab">HSK Level: </label>
-                <select name="vocab" id="vocab" defaultValue={5} ref={hskLevelEl}>
-                    {hskLevels.map(level => <option key={"hsk-"+level} value={level}>HSK-{level}</option>)}
+                <select name="vocab" id="vocab" 
+                    defaultValue={settings.hskLevel[settings.hskLevel.length-1]} 
+                    onChange={handleVocabSelect}>
+                        {hskLevels.map(level => <option key={"hsk-"+level} value={level}>HSK-{level}</option>)}
                 </select>
             </div>
 

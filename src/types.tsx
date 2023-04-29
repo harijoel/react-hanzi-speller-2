@@ -10,6 +10,8 @@ export type HanziPinyin = {
     textToType_Syl: string
   }
 
+export type HskLevel = "hsk1" | "hsk2" | "hsk3" | "hsk4" | "hsk5" | "hsk6" | "hskAll"
+
 export type Setting = {
   mode: string
   mistakeCountTolerance: number
@@ -18,7 +20,7 @@ export type Setting = {
   hideChars: boolean
   showEnglish: boolean
   animations: boolean
-  hskLevel?: number 
+  hskLevel: string
   [key: string]: any
 }
 
@@ -38,3 +40,4 @@ export type HSKword = {
 }
 
 export type TouchedEl = "none" | "emoji" | "new-word-btn"
+
