@@ -99,7 +99,7 @@ function App() {
       }
       setHskWord(randomHSK)
     }
-  }, [settings.hskLevel])
+  }, [hskWord ,settings.hskLevel])
 
   // Add input key functionality
   const addInputKey = useCallback(
@@ -165,7 +165,7 @@ function App() {
   // Handle 'Keypress' & router
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      const key = e.key
+      const key = e.key.toLowerCase()
       if (!key.match(/^[a-z0-9]$/)) return
       e.preventDefault
 
@@ -189,7 +189,7 @@ function App() {
   // Handle extra keypress
   useEffect(() => {
     if (isSpellingOver && mistakeTrail.length && mode !== "onlyTones") {
-      setInputKeys(oldInputKeys => [...oldInputKeys, {inputKey: [mistakeTrail[0]], correctKey: "..."}])
+      setInputKeys(oldInputKeys => [...oldInputKeys, {inputKey: [mistakeTrail[0]], correctKey: "-"}])
     }
   }, [isSpellingOver, mistakeTrail, mode])
 
@@ -211,10 +211,9 @@ function App() {
         resetState(true)
       } 
       else { 
-      // ((mistakeTrail.length > 0 || dynamicIndex === normalIndex && !showAns) || (hideChars && showAns)) && !(showAns && !hideChars )
       const isAnyKeypress = mistakeTrail.length > 0 || dynamicIndex === normalIndex
       const justFlip = (hideChars && showAns)
-      // 
+      // Enable reveal mode
         if (isAnyKeypress && !showAns || justFlip) {
           playMistakeFX()
           setRevealNos(oldRevealNos => [...oldRevealNos, dynamicIndex])

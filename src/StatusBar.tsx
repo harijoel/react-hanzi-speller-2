@@ -166,7 +166,7 @@ export default function StatusBar({
                 (<StatDelta statDelta={timeVars.hanziAccuracyDif} />)
             </div>
 
-            <h3 className="input-visual">
+            {/* <h3 className="input-visual">
 
                 {vocabularySetId}:#{wordId}
                 :$
@@ -183,7 +183,7 @@ export default function StatusBar({
 
                 |{mistakeTrail.map((mk, i) => <span key={"mk-"+i} style={{color: "black"}}>{mk}</span> )}
 
-            </h3>
+            </h3> */}
         </div>
     )
 }

@@ -69,7 +69,7 @@ export default function Speller({
 
                 {isExtraKey && 
                     <span className='speller-spelling extra-key' style={{color: charColors[charColors.length-1]}}>
-                        {"*"}
+                        {"-"}
                     </span> }
             </div>
 
