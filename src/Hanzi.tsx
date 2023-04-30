@@ -5,7 +5,7 @@ import ExactInput from './ExactInput'
 import { useClickHoldState } from './customHooks'
 
 type HanziProps = {
-    hanziKey?: string
+    hanziKey: string
     hanziPinyinChar: HanziPinyin
     spelledKeys?: SpelledKey[]
     traditional: boolean
